@@ -1,0 +1,24 @@
+Potentially helpful links
+
+# =====================================
+# tutorials
+# =====================================
+Helloworld
+https://pythonbasics.org/qt-designer-python/
+Intro tutorial
+https://realpython.com/qt-designer-python/
+
+# ref
+https://www.riverbankcomputing.com/static/Docs/PyQt4/qobject.html#findChildren
+https://python-forum.io/thread-1466.html
+
+
+# style sheets
+https://stackoverflow.com/questions/22504421/how-to-apply-style-sheet-to-a-custom-widget-in-pyqt
+
+
+# =====================================
+# Download
+# =====================================
+https://build-system.fman.io/qt-designer-download
+

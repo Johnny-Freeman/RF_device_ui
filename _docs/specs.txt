@@ -1,0 +1,52 @@
+# ==========================================
+# UI should consist of these three modes / panels:
+# ==========================================
+RF Signal Generator mode
+	Controls:
+		Output Frequency
+		Output Power
+		RF On / Off
+	Displays:
+		Current output frequency, power, and whether the output is on/off
+		VCO + PLL lock indication
+	Notes:
+		Needs to be some kind of numeric pad that pops up when you are setting output frequency / power
+		Will want to have a means to specify frequency in Hz, KHz, MHz, GHz to the user's preference
+		Will want to have a means to specify power in dBm, mW, Watts to the user's preference
+RF Power Detector mode
+	Controls:
+		Static mode / Sweep mode
+		Sweep mode controls:
+			Start / stop frequencies
+			Number of steps
+			RF output power
+	Displays:
+		Static mode - Measured RF power as a single number
+		Sweep mode - Measured RF power vs. frequency as a graph
+	Notes:
+		Static mode is for the RF power detector to just sit there and measure the power from whatever is hooked up to that RF connector
+		Sweep mode uses the RF signal generator for a simple RF throughput measurement. The signal generator sweeps from start to stop frequency with given number of steps.
+Settings mode
+	Controls:
+		Mechanism to punch in network settings (dhcp vs. static, IP address, etc.)
+		Mechanism to download software update from github if on internet
+	Displays:
+		Power system information (voltage, current, battery power, etc.)
+		Network information (IP address, dhcp vs. static, etc.)
+		Firmware version
+
+#
+All modes should have a top bar that indicates whether device is plugged into wall or on battery power and network connectivity. (edited) 
+#
+The hardware is at my house now, and I'm kind of putting it together and writing back-end code as I go, but I can provide a dummy python library in the interim for you to plug the UI into
+#
+The software development work would all be done with python 3
+
+
+# ==========================================
+# Frameworks worth looking at:
+# ==========================================
+# https://www.mouser.com/ProductDetail/Keysight/E36311A-0EM-903?qs=YCa%2FAAYMW01IkKO%252BoscdEA%3D%3D&mgh=1&gclid=Cj0KCQjwxJqHBhC4ARIsAChq4as2iCIr1qs6_xOX4clbnPtZ7pTRpC0Do1n0vwE9Z5nRiAmiYxpjndIaAr2pEALw_wcB
+Qt (probably best) agreed due to predefined structures
+SDL / Pygame (lower level than Qt) need to write structures
+Gtk (probably worst) dafaq?
