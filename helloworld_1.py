@@ -8,7 +8,7 @@ root_dir = """E:/projects_Python/RF_device_ui/"""
 # ==============================================
 # Globals that need to happento setup
 # ==============================================
-path = root_dir + "helloworld.ui"
+path = root_dir + "helloworld_1.ui"
 app = QApplication([])
 
 
@@ -53,6 +53,55 @@ def import_widget3(path, parent=None):
 
 	return dummy(parent)
 
+def import_widget4(path):
+	# Loads UI
+	# This method is prefered
+	#	Returns a parent_class for inheritence
+	#	Loads helpful general use methods
+	#	Allows initial configuration of class such as modal
+	
+	# Use case:
+	#b = import_widget4(path)
+	#class dummy(b):			
+	#		def __init__(self, parent=None):
+	#			super().__init__(parent)	
+	#		def Foobar(self):
+	#			pass
+		
+	Widget_Ui, Widget_class = uic.loadUiType(path)
+	class dummy(Widget_class):
+		# -------------------------
+		# Helpful widget functions
+		# -------------------------
+		def getChild(self, regex_name):
+			# returns child, quick and simple
+			# QWidget is the most basic of classes and will search through all widgets.
+			return self.findChild(QWidget, regex_name)
+		
+		def getChildren(self, regex_name):
+			# returns list of children, quick and simple
+			# QWidget is the most basic of classes and will search through all widgets.
+			return self.findChildren(QWidget, regex_name)
+		
+		def __init__(self, parent=None):
+			super().__init__(parent)
+			# Widget_class uses Widget_Ui to configure itself( passes Widget_Ui.setupUi(Widget_class) )
+			# this method is composition
+			ui = Widget_Ui()
+			ui.setupUi(self)
+			
+			# PlaceHolder
+			self.ConnectSignalsAndSlots()
+			
+		def ConnectSignalsAndSlots(self, *args, **kwargs):
+			# PlaceHolder, override at will.
+			# Programmically define click actions of children
+			# self.findChild(QWidget, 'pushButton2').clicked.connect(self.print_funct)
+			# self.getChild('pushButton2').clicked.connect(self.print_funct)
+			pass
+		
+	return dummy #returns a class, not instance to use as inheritence later.
+
 
 
 # ==============================================
@@ -81,7 +130,7 @@ def import_widget4(path, parent=None):
 			
 			# ConnectSignalsAndSlots (programmically)
 			# programmically define click actions of children
-			# self.findChild(QWidget, 'pushButton2').clicked.connect(self.print_this)
+			# self.findChild(QWidget, 'pushButton2').clicked.connect(self.print_funct)
 			
 			self.counter = 1
 		
@@ -97,7 +146,7 @@ def import_widget4(path, parent=None):
 			self.counter +=1
 			# print(self.counter)
 		
-		def print_this(self):
+		def print_funct(self):
 			print('yo')
 
 	return dummy(parent)
