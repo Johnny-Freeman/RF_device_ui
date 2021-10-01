@@ -6,6 +6,17 @@ import time
 root_dir = """E:/projects_Python/RF_device_ui/"""
 
 # ==============================================
+# Solving rasbian core issues
+# ==============================================
+# https://raspberrypi.stackexchange.com/questions/61078/qt-applications-dont-work-due-to-libegl
+"""
+Looks like two options either built QT5 from source -or- try symlink.
+Apparenlty building from source takes 40 hours, symlinks only take a few seconds.
+"""
+
+
+
+# ==============================================
 # Globals that need to happento setup
 # ==============================================
 path = root_dir + "helloworld_2.ui"
@@ -56,6 +67,14 @@ class dummy(b):
 		def __init__(self, parent=None):
 			super().__init__(parent)			
 			self.counter = 1
+			
+			# trying to load style sheet before showing window to see if that makes any difference
+			style_sheet_test = """
+				#pushButton3 {
+					background-color: rgb(0, 0, 100);
+				}
+			"""
+			self.setStyleSheet(style_sheet_test)
 		
 		def pushbutton_slot_test_1(self):
 			# one way to interact is by overriding slot in the dialog.
@@ -83,12 +102,12 @@ class dummy(b):
 			# That's rather annoying, #hashtag >> means search by ID, otherwise the name is taken as class/widget_space
 			# Otherwise you could use QPushButton#pushButton3
 			# Would be worth while to write a simple to use regex qt_stylesheet library or find one.
-			style_sheet_test = """
-				#pushButton3 {
-					background-color: rgb(0, 0, 100);
-				}
-			"""
-			self.setStyleSheet(style_sheet_test)
+			###style_sheet_test = """
+			###	#pushButton3 {
+			###		background-color: rgb(0, 0, 100);
+			###	}
+			###"""
+			###self.setStyleSheet(style_sheet_test)
 			
 			# This works, but is bulky if we want to focus on style sheet
 			# self.getChild('textEdit1').setStyleSheet("""	background-color: rgb(0, 0, 100);""")

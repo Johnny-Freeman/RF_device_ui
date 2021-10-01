@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=J69-bxOSMC8
+
+screen rotate
+config.txt edit: lcd_rotate=2
+
+https://www.youtube.com/watch?v=OSN4XabOAOM
+https://www.amazon.com/Raspberry-Touchscreen-Monitor-1024x600-Speakers/dp/B07S51QDTG/ref=as_li_ss_tl?dchild=1&keywords=7+inch+ips+touchscreen+for+raspberry+pi+4,+1024+600&qid=1599755785&sr=8-3&linkCode=sl1&tag=e074d-20&linkId=33e2aa87bc7122656ede0ab39b663084&language=en_US
+
+
