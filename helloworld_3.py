@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QWidget
 import time
 
 root_dir = """E:/projects_Python/RF_device_ui/"""
+root_dir = """/home/pi/Downloads/RF_device_ui/"""
 
 # ==============================================
 # Solving rasbian core issues
