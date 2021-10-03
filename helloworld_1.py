@@ -8,7 +8,7 @@ root_dir = """E:/projects_Python/RF_device_ui/"""
 # ==============================================
 # Globals that need to happento setup
 # ==============================================
-path = root_dir + "helloworld_1.ui"
+path = root_dir + """/ui/helloworld_1.ui"""
 app = QApplication([])
 
 

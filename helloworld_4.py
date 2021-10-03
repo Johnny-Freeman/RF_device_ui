@@ -1,14 +1,24 @@
-from PyQt5 import uic
+from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QWidget
 
 import time
 
 root_dir = """E:/projects_Python/RF_device_ui/"""
+# root_dir = """/home/pi/Downloads/RF_device_ui/"""
+
+# ==============================================
+# Solving rasbian core issues
+# ==============================================
+# https://raspberrypi.stackexchange.com/questions/61078/qt-applications-dont-work-due-to-libegl
+"""
+Looks like two options either built QT5 from source -or- try symlink.
+Apparenlty building from source takes 40 hours, symlinks only take a few seconds.
+"""
 
 # ==============================================
 # Globals that need to happento setup
 # ==============================================
-path = root_dir + """/ui/helloworld_2.ui"""
+path = root_dir + """/ui/helloworld_4.ui"""
 app = QApplication([])
 
 # ==============================================
@@ -55,48 +65,23 @@ b = import_widget4(path)
 class dummy(b):			
 		def __init__(self, parent=None):
 			super().__init__(parent)			
-			self.counter = 1
-		
-		def pushbutton_slot_test_1(self):
-			# one way to interact is by overriding slot in the dialog.
+			# PlaceHolder
+			self.ConnectSignalsAndSlots()
 			
-			# setting values
-			self.getChild('textEdit1').setText('yo' + str(self.counter))
+			# full screen
+			self.windowsetup()
 			
-			# reading values
-			print(self.getChild('textEdit1').toPlainText())
+		def windowsetup(self):
+			# https://stackoverflow.com/questions/7021502/pyqt-remove-the-programs-title-bar
+			# https://doc.qt.io/qt-5/qtwidgets-widgets-windowflags-example.html
+			self.setWindowFlags(QtCore.Qt.FramelessWindowHint) # requires QtCore, but more control
+			# self.showFullScreen()
 			
-			self.counter +=1
-			# print(self.counter)
-		
-		def pushbutton_restyle(self):
-			# -------------------------
-			# Style sheets
-			# -------------------------
-			# https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html
-			# https://doc.qt.io/qt-5/stylesheet-syntax.html#selector-types
-			# https://stackoverflow.com/questions/22504421/how-to-apply-style-sheet-to-a-custom-widget-in-pyqt
-			
-			print("setting....")
-			time.sleep(1)
-			
-			# That's rather annoying, #hashtag >> means search by ID, otherwise the name is taken as class/widget_space
-			# Otherwise you could use QPushButton#pushButton3
-			# Would be worth while to write a simple to use regex qt_stylesheet library or find one.
-			style_sheet_test = """
-				#pushButton3 {
-					background-color: rgb(0, 0, 100);
-				}
-			"""
-			self.setStyleSheet(style_sheet_test)
-			
-			# This works, but is bulky if we want to focus on style sheet
-			# self.getChild('textEdit1').setStyleSheet("""	background-color: rgb(0, 0, 100);""")
-			# self.getChild('pushButton3').setStyleSheet("""	background-color: rgb(0, 0, 100);""")
-			
-			
-		def export_style_sheet(self):
-			return self.styleSheet()
+		def ConnectSignalsAndSlots(self, *args, **kwargs):
+			# PlaceHolder, override at will.
+			# Programmically define click actions of children
+			self.getChild('btn_exit').clicked.connect(self.close)
+			pass
 
 d = dummy()
 d.show()

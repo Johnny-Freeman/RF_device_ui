@@ -17,6 +17,10 @@ https://python-forum.io/thread-1466.html
 https://stackoverflow.com/questions/22504421/how-to-apply-style-sheet-to-a-custom-widget-in-pyqt
 
 
+# Tabs and Full screen
+https://www.youtube.com/watch?v=i4rau-6PhNM
+
+
 # =====================================
 # Download
 # =====================================

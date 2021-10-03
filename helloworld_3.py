@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QApplication, QWidget
 import time
 
 root_dir = """E:/projects_Python/RF_device_ui/"""
-root_dir = """/home/pi/Downloads/RF_device_ui/"""
+# root_dir = """/home/pi/Downloads/RF_device_ui/"""
 
 # ==============================================
 # Solving rasbian core issues
@@ -20,7 +20,7 @@ Apparenlty building from source takes 40 hours, symlinks only take a few seconds
 # ==============================================
 # Globals that need to happento setup
 # ==============================================
-path = root_dir + "helloworld_2.ui"
+path = root_dir + """/ui/helloworld_2.ui"""
 app = QApplication([])
 
 # ==============================================
