@@ -3,8 +3,8 @@ from PyQt5.QtWidgets import QApplication, QWidget
 
 import time
 
-root_dir = """E:/projects_Python/RF_device_ui/"""
-# root_dir = """/home/pi/Downloads/RF_device_ui/"""
+# root_dir = """E:/projects_Python/RF_device_ui/"""
+root_dir = """/home/pi/Downloads/RF_device_ui/"""
 
 # ==============================================
 # Solving rasbian core issues
@@ -75,7 +75,7 @@ class dummy(b):
 			# https://stackoverflow.com/questions/7021502/pyqt-remove-the-programs-title-bar
 			# https://doc.qt.io/qt-5/qtwidgets-widgets-windowflags-example.html
 			self.setWindowFlags(QtCore.Qt.FramelessWindowHint) # requires QtCore, but more control
-			# self.showFullScreen()
+			self.showFullScreen()
 			
 		def ConnectSignalsAndSlots(self, *args, **kwargs):
 			# PlaceHolder, override at will.
