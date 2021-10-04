@@ -1,23 +1,15 @@
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QWidget
 
-import time
-
-# root_dir = """E:/projects_Python/RF_device_ui/"""
-root_dir = """/home/pi/Downloads/RF_device_ui/"""
-
-# ==============================================
-# Solving rasbian core issues
-# ==============================================
-# https://raspberrypi.stackexchange.com/questions/61078/qt-applications-dont-work-due-to-libegl
-"""
-Looks like two options either built QT5 from source -or- try symlink.
-Apparenlty building from source takes 40 hours, symlinks only take a few seconds.
-"""
+import time, os
 
 # ==============================================
 # Globals that need to happento setup
 # ==============================================
+root_dir = """E:/projects_Python/RF_device_ui/"""
+if not os.name == 'nt':
+	root_dir = """/home/pi/Downloads/RF_device_ui/"""
+
 path = root_dir + """/ui/helloworld_4.ui"""
 app = QApplication([])
 

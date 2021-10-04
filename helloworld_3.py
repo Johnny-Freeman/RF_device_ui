@@ -1,10 +1,7 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QWidget
 
-import time
-
-root_dir = """E:/projects_Python/RF_device_ui/"""
-# root_dir = """/home/pi/Downloads/RF_device_ui/"""
+import time, os
 
 # ==============================================
 # Solving rasbian core issues
@@ -15,11 +12,13 @@ Looks like two options either built QT5 from source -or- try symlink.
 Apparenlty building from source takes 40 hours, symlinks only take a few seconds.
 """
 
-
-
 # ==============================================
 # Globals that need to happento setup
 # ==============================================
+root_dir = """E:/projects_Python/RF_device_ui/"""
+if not os.name == 'nt':
+	root_dir = """/home/pi/Downloads/RF_device_ui/"""
+
 path = root_dir + """/ui/helloworld_2.ui"""
 app = QApplication([])
 
