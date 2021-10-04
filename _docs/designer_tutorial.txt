@@ -18,8 +18,17 @@ https://stackoverflow.com/questions/22504421/how-to-apply-style-sheet-to-a-custo
 
 
 # Tabs and Full screen
-https://www.youtube.com/watch?v=i4rau-6PhNM
+how-to
+	https://www.youtube.com/watch?v=i4rau-6PhNM
+tab style sheet
+	https://stackoverflow.com/questions/1725601/qt-increase-qtabwidgets-qtabbar-size
 
+
+# Squared Radio buttons
+https://stackoverflow.com/questions/12472817/qt-squared-radio-button
+	use QButtonGroup instead of morphing a circle into a sqaure lol.
+	https://doc.qt.io/archives/qt-4.8/qbuttongroup.html
+	
 
 # =====================================
 # Download

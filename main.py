@@ -10,7 +10,7 @@ root_dir = """E:/projects_Python/RF_device_ui/"""
 if not os.name == 'nt':
 	root_dir = """/home/pi/Downloads/RF_device_ui/"""
 
-path = root_dir + """/ui/helloworld_4.ui"""
+path = root_dir + """/ui/main_1.ui"""
 app = QApplication([])
 
 # ==============================================
@@ -54,7 +54,7 @@ def import_widget4(path):
 
 
 b = import_widget4(path)
-class dummy(b):			
+class main_menu(b):			
 		def __init__(self, parent=None):
 			super().__init__(parent)			
 			# PlaceHolder
@@ -62,6 +62,14 @@ class dummy(b):
 			
 			# Situate Window
 			self.windowsetup()
+			
+			
+			# not sure if this is best method
+			# depends on backend implimentation
+			self.state = {
+				"rf_on_off" : True,
+			}
+			
 			
 		def windowsetup(self):
 			# https://stackoverflow.com/questions/7021502/pyqt-remove-the-programs-title-bar
@@ -73,10 +81,28 @@ class dummy(b):
 			# PlaceHolder, override at will.
 			# Programmically define click actions of children
 			self.getChild('btn_exit').clicked.connect(self.close)
-			pass
+			
+			# clicked (not toggled) seems to work best for grouped buttons
+			self.getChild('btn_rf_on').clicked.connect(self.update_checkbox_labels)
+			self.getChild('btn_rf_off').clicked.connect(self.update_checkbox_labels)
+			self.getChild('btn_rf_on_2').clicked.connect(self.update_checkbox_labels)
+			
+		def update_checkbox_labels(self):
+			print("toggled") # looks grouped buttons have a double click to them.
+			if self.getChild('btn_rf_on').isChecked():
+				# ON
+				self.getChild('lbl_status').setText("RF is ON")
+			elif self.getChild('btn_rf_off').isChecked():
+				#OFF
+				self.getChild('lbl_status').setText("RF is OFF")
+			else:
+				# Whoops
+				self.getChild('lbl_status').setText("What have you done.")
 
-d = dummy()
-d.show()
+
+
+m = main_menu()
+m.show()
 
 app.exec_()
 
