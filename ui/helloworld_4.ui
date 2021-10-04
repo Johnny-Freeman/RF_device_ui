@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>799</width>
-    <height>776</height>
+    <height>532</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>621</width>
-      <height>341</height>
+      <x>0</x>
+      <y>0</y>
+      <width>791</width>
+      <height>491</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -43,11 +43,11 @@
        <string>Exit</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
-        <x>440</x>
-        <y>130</y>
+        <x>710</x>
+        <y>440</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -74,35 +74,6 @@
        <string>This Button does nothing</string>
       </property>
      </widget>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="frame">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>300</y>
-      <width>441</width>
-      <height>301</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QPushButton" name="pushButton">
-     <property name="geometry">
-      <rect>
-       <x>240</x>
-       <y>130</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>PushButton</string>
-     </property>
     </widget>
    </widget>
   </widget>
