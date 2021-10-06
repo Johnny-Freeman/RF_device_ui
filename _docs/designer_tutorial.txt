@@ -15,6 +15,7 @@ https://python-forum.io/thread-1466.html
 
 # style sheets
 https://stackoverflow.com/questions/22504421/how-to-apply-style-sheet-to-a-custom-widget-in-pyqt
+https://doc.qt.io/qt-5/stylesheet-syntax.html
 
 
 # Tabs and Full screen

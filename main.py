@@ -70,6 +70,9 @@ class main_menu(b):
 				"rf_on_off" : True,
 			}
 			
+			# load tab style sheets
+			self.getChild('tabWidget').setStyleSheet("QTabBar::tab { height: 40px; width: 120px; }")
+			
 			
 		def windowsetup(self):
 			# https://stackoverflow.com/questions/7021502/pyqt-remove-the-programs-title-bar
