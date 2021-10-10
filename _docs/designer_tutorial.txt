@@ -16,6 +16,11 @@ https://python-forum.io/thread-1466.html
 # style sheets
 https://stackoverflow.com/questions/22504421/how-to-apply-style-sheet-to-a-custom-widget-in-pyqt
 https://doc.qt.io/qt-5/stylesheet-syntax.html
+https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html
+
+	# Possible child widget positioning
+	https://doc.qt.io/qt-5/qwidget.html#pos-prop
+	https://doc.qt.io/qt-5/qwindow.html#QWindow-1
 
 
 # Tabs and Full screen

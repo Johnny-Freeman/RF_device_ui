@@ -70,9 +70,20 @@ class main_menu(b):
 				"rf_on_off" : True,
 			}
 			
-			# load tab style sheets
-			self.getChild('tabWidget').setStyleSheet("QTabBar::tab { height: 40px; width: 120px; }")
+			self.load_stylesheets()
 			
+						
+		def load_stylesheets(self):
+			# load tab style sheets
+			# self.getChild('tabWidget').setStyleSheet("QTabBar::tab { height: 40px; width: 120px; }")
+			
+			# general stylesheet
+			stylesheet = """
+				#tabWidget {
+					QTabBar::tab { height: 40px; width: 120px; }
+				}
+			"""
+			self.setStyleSheet(stylesheet)
 			
 		def windowsetup(self):
 			# https://stackoverflow.com/questions/7021502/pyqt-remove-the-programs-title-bar
@@ -92,15 +103,15 @@ class main_menu(b):
 			
 		def update_checkbox_labels(self):
 			print("toggled") # looks grouped buttons have a double click to them.
-			if self.getChild('btn_rf_on').isChecked():
-				# ON
-				self.getChild('lbl_status').setText("RF is ON")
-			elif self.getChild('btn_rf_off').isChecked():
-				#OFF
-				self.getChild('lbl_status').setText("RF is OFF")
-			else:
-				# Whoops
-				self.getChild('lbl_status').setText("What have you done.")
+			# if self.getChild('btn_rf_on').isChecked():
+			# 	# ON
+			# 	self.getChild('lbl_status').setText("RF is ON")
+			# elif self.getChild('btn_rf_off').isChecked():
+			# 	#OFF
+			# 	self.getChild('lbl_status').setText("RF is OFF")
+			# else:
+			# 	# Whoops
+			# 	self.getChild('lbl_status').setText("What have you done.")
 
 
 
