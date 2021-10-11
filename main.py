@@ -1,6 +1,5 @@
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QApplication, QWidget
-
 import time, os
 
 # ==============================================
