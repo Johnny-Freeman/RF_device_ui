@@ -403,4 +403,7 @@
  </widget>
  <resources/>
  <connections/>
+ <slots>
+  <slot>click_btn_num_1()</slot>
+ </slots>
 </ui>
