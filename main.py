@@ -57,7 +57,6 @@ class main_menu(b):
 		def __init__(self, parent=None):
 			super().__init__(parent)			
 			# PlaceHolder
-			self.ConnectSignalsAndSlots()
 			
 			# Situate Window
 			self.windowsetup()
