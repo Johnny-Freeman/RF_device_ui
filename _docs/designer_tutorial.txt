@@ -34,7 +34,13 @@ tab style sheet
 https://stackoverflow.com/questions/12472817/qt-squared-radio-button
 	use QButtonGroup instead of morphing a circle into a sqaure lol.
 	https://doc.qt.io/archives/qt-4.8/qbuttongroup.html
-	
+
+
+# Plots
+	#Matplotlib
+	https://www.youtube.com/watch?v=qwzapIxXRSQ
+	#QCustomPlot 
+	https://www.youtube.com/watch?v=lXXUxy5Opds&t=2s
 
 # =====================================
 # Download

@@ -28,7 +28,8 @@ RF Power Detector mode
 		Sweep mode uses the RF signal generator for a simple RF throughput measurement. The signal generator sweeps from start to stop frequency with given number of steps.
 Settings mode
 	Controls:
-		Mechanism to punch in network settings (dhcp vs. static, IP address, etc.)
+		Mechanism to punch in network settings ( Dynamic (DHCP, default) vs. static, IP address, etc.)
+			Have a factory default settings button.
 		Mechanism to download software update from github if on internet
 	Displays:
 		Power system information (voltage, current, battery power, etc.)
