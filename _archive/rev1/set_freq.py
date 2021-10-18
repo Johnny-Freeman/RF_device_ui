@@ -1,7 +1,7 @@
 from PyQt5 import QtCore
-import os
+import time, os
 
-from classes import import_widget4, Power, UNIT
+from classes import import_widget4
 
 # ==============================================
 # Globals that need to happento setup
@@ -25,14 +25,14 @@ def _getRoot(relative=True):
 	root = os.path.dirname(os.path.abspath(module.__file__))
 	return root
 
-path = _getRoot() + """/ui/set_pwr.ui"""
+path = _getRoot() + """/ui/set_freq.ui"""
 
 # ==============================================
-# Widget dialog to get power input
+# Widget dialog to get frequency input
 # ==============================================
 b = import_widget4(path)
-class QDialog_Set_Power(b):			
-		def __init__(self, parent=None, initial_value=Power(0, UNIT.DBM), power_unit=UNIT.DBM):
+class QDialog_Set_Freq(b):			
+		def __init__(self, parent=None, initial_value=0, freq_unit="HZ"):
 			super().__init__(parent)
 			
 			# Situate Window
@@ -42,10 +42,10 @@ class QDialog_Set_Power(b):
 			# not sure if this is best method
 			# depends on backend implimentation
 			self.state = {
-				"reset_value"	: str(initial_value.cast(power_unit)),
+				"reset_value"	: str(initial_value),
 				"input_value"	: "0",
-				"reset_unit"	: power_unit,
-				"pwr_unit"		: power_unit,
+				"reset_unit"	: freq_unit.upper(),
+				"freq_unit"		: "HZ",
 			}
 			
 			# display zeros
@@ -91,10 +91,10 @@ class QDialog_Set_Power(b):
 			self.getChild('input_txt_num').textChanged.connect(self.keyboard_text_input_changed)
 			
 			# Radio buttons, freq choice
-			# WIP
-			self.getChild('btn_dBm').clicked.connect(self.update_power_choice)
-			self.getChild('btn_mW').clicked.connect(self.update_power_choice)
-			self.getChild('btn_W').clicked.connect(self.update_power_choice)
+			self.getChild('btn_Hz').clicked.connect(self.update_frequency_choice)
+			self.getChild('btn_KHz').clicked.connect(self.update_frequency_choice)
+			self.getChild('btn_MHz').clicked.connect(self.update_frequency_choice)
+			self.getChild('btn_GHz').clicked.connect(self.update_frequency_choice)
 		
 		# ------------------
 		# Keypad
@@ -161,7 +161,7 @@ class QDialog_Set_Power(b):
 		
 		def click_btn_reset(self):
 			self.value_update(self.state["reset_value"])
-			self.reset_power_choice()
+			self.reset_frequency_choice()
 		
 		
 		# ------------------
@@ -196,33 +196,37 @@ class QDialog_Set_Power(b):
 			
 			# else test input if valid float
 			self.value_update(str_value)
-		
-		def reset_power_choice(self):
+			
+		def reset_frequency_choice(self):
 			self.state["freq_unit"] = self.state["reset_unit"]
-			if self.state["freq_unit"] == UNIT.MIL:
-				self.getChild("btn_mW").setChecked(True)
-			elif self.state["freq_unit"] == UNIT.W:
-				self.getChild("btn_W").setChecked(True)
-			else: # dBm
-				self.getChild("btn_dBm").setChecked(True)
+			if self.state["freq_unit"] == "HZ":
+				self.getChild("btn_Hz").setChecked(True)
+			elif self.state["freq_unit"] == "KHZ":
+				self.getChild("btn_KHz").setChecked(True)
+			elif self.state["freq_unit"] == "MHZ":
+				self.getChild("btn_MHz").setChecked(True)
+			else: # GHz
+				self.getChild("btn_GHz").setChecked(True)
 			
 			# update display
-			self.update_power_choice()
+			self.update_frequency_choice()
 		
 		def update_display(self):
-			self.getChild('input_txt_num').setText( self.state["input_value"] )
-			self.update_power_choice()
+			self.getChild('input_txt_num').setText(str(self.state["input_value"]))
+			self.update_frequency_choice()
 		
-		def update_power_choice(self):
-			if self.getChild('btn_mW').isChecked():
-				self.state["freq_unit"] = UNIT.MIL
-			elif self.getChild('btn_W').isChecked():
-				self.state["freq_unit"] = UNIT.W
-			else: # dBm
-				self.state["freq_unit"] = UNIT.DBM
+		def update_frequency_choice(self):
+			if self.getChild('btn_Hz').isChecked():
+				self.state["freq_unit"] = "HZ"
+			elif self.getChild('btn_KHz').isChecked():
+				self.state["freq_unit"] = "KHZ"
+			elif self.getChild('btn_MHz').isChecked():
+				self.state["freq_unit"] = "MHZ"
+			else: # GHz
+				self.state["freq_unit"] = "GHZ"
 			
 			# last char is lowercase
-			self.getChild('lbl_unit').setText( str(self.state["freq_unit"]) )
+			self.getChild('lbl_unit').setText( self.state["freq_unit"][:-1] + self.state["freq_unit"][-1].lower() )
 		
 		# ------------------
 		# Callback
@@ -232,19 +236,18 @@ class QDialog_Set_Power(b):
 			# looked into QInputDialog's source code to see how they do it, but this is better
 			result = super().result()
 			if result:
-				f = Power(float(self.state["input_value"]), self.state["freq_unit"])
-				return ( f , self.state["freq_unit"]), True
+				return (float(self.state["input_value"]), self.state["freq_unit"]), True
 			else:
 				return (None, None), False
-
 
 if __name__ == "__main__":
 	from PyQt5.QtWidgets import QApplication
 	app = QApplication([])
 	
-	new_widget = QDialog_Set_Power()
+	new_widget = QDialog_Set_Freq()
 	new_widget.exec_()
 	
 	print(new_widget.result())
 	
 	# app.exec_() # to emulate calling window block
+	

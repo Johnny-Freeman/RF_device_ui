@@ -1,7 +1,7 @@
 from PyQt5 import QtCore
-import time, os
+import os
 
-from classes import import_widget4
+from classes import import_widget4, Freq, UNIT
 
 # ==============================================
 # Globals that need to happento setup
@@ -32,20 +32,19 @@ path = _getRoot() + """/ui/set_freq.ui"""
 # ==============================================
 b = import_widget4(path)
 class QDialog_Set_Freq(b):			
-		def __init__(self, parent=None, initial_value=0, freq_unit="HZ"):
+		def __init__(self, parent=None, initial_value=Freq(0, UNIT.HZ), freq_unit=UNIT.HZ):
 			super().__init__(parent)
 			
 			# Situate Window
 			self.window_setup()
 			self.load_stylesheets()
 			
-			# not sure if this is best method
-			# depends on backend implimentation
+			# Cast and work with strings (user inputs)
 			self.state = {
-				"reset_value"	: str(initial_value),
+				"reset_value"	: str(initial_value.cast(freq_unit)),
 				"input_value"	: "0",
-				"reset_unit"	: freq_unit.upper(),
-				"freq_unit"		: "HZ",
+				"freq_unit"		: freq_unit,
+				"reset_unit"	: freq_unit,
 			}
 			
 			# display zeros
@@ -199,11 +198,11 @@ class QDialog_Set_Freq(b):
 			
 		def reset_frequency_choice(self):
 			self.state["freq_unit"] = self.state["reset_unit"]
-			if self.state["freq_unit"] == "HZ":
+			if self.state["freq_unit"] == UNIT.HZ:
 				self.getChild("btn_Hz").setChecked(True)
-			elif self.state["freq_unit"] == "KHZ":
+			elif self.state["freq_unit"] == UNIT.KHZ:
 				self.getChild("btn_KHz").setChecked(True)
-			elif self.state["freq_unit"] == "MHZ":
+			elif self.state["freq_unit"] == UNIT.MHZ:
 				self.getChild("btn_MHz").setChecked(True)
 			else: # GHz
 				self.getChild("btn_GHz").setChecked(True)
@@ -212,21 +211,21 @@ class QDialog_Set_Freq(b):
 			self.update_frequency_choice()
 		
 		def update_display(self):
-			self.getChild('input_txt_num').setText(str(self.state["input_value"]))
+			self.getChild('input_txt_num').setText( self.state["input_value"] )
 			self.update_frequency_choice()
 		
 		def update_frequency_choice(self):
 			if self.getChild('btn_Hz').isChecked():
-				self.state["freq_unit"] = "HZ"
+				self.state["freq_unit"] = UNIT.HZ
 			elif self.getChild('btn_KHz').isChecked():
-				self.state["freq_unit"] = "KHZ"
+				self.state["freq_unit"] = UNIT.KHZ
 			elif self.getChild('btn_MHz').isChecked():
-				self.state["freq_unit"] = "MHZ"
+				self.state["freq_unit"] = UNIT.MHZ
 			else: # GHz
-				self.state["freq_unit"] = "GHZ"
+				self.state["freq_unit"] = UNIT.GHZ
 			
 			# last char is lowercase
-			self.getChild('lbl_unit').setText( self.state["freq_unit"][:-1] + self.state["freq_unit"][-1].lower() )
+			self.getChild('lbl_unit').setText( str(self.state["freq_unit"]) )
 		
 		# ------------------
 		# Callback
@@ -236,7 +235,8 @@ class QDialog_Set_Freq(b):
 			# looked into QInputDialog's source code to see how they do it, but this is better
 			result = super().result()
 			if result:
-				return (float(self.state["input_value"]), self.state["freq_unit"]), True
+				f = Freq(float(self.state["input_value"]), self.state["freq_unit"])
+				return ( f , self.state["freq_unit"]), True
 			else:
 				return (None, None), False
 

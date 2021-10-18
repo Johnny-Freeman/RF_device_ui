@@ -197,7 +197,7 @@
       <property name="title">
        <string>OUTPUT</string>
       </property>
-      <widget class="QLabel" name="lbl_output_power">
+      <widget class="QLabel" name="lbl_pwr_out">
        <property name="geometry">
         <rect>
          <x>60</x>
@@ -207,7 +207,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>0.0000 dBm</string>
+        <string>0.0000 Hz</string>
        </property>
       </widget>
       <widget class="QFrame" name="frame_freq_mag">
@@ -309,7 +309,7 @@
         </property>
        </widget>
       </widget>
-      <widget class="QLabel" name="lbl_output_freq">
+      <widget class="QLabel" name="lbl_freq_out">
        <property name="geometry">
         <rect>
          <x>60</x>
@@ -424,7 +424,7 @@
         <string>SET PWR</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lbl_target_freq">
+      <widget class="QLabel" name="lbl_freq_target">
        <property name="geometry">
         <rect>
          <x>60</x>
@@ -450,7 +450,7 @@
         <string>SET FREQ</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lbl_target_power">
+      <widget class="QLabel" name="lbl_pwr_target">
        <property name="geometry">
         <rect>
          <x>60</x>

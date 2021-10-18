@@ -51,3 +51,15 @@ The software development work would all be done with python 3
 Qt (probably best) agreed due to predefined structures
 SDL / Pygame (lower level than Qt) need to write structures
 Gtk (probably worst) dafaq?
+
+
+
+TO DO:
+Agile - type up.
+Hz and KHZ not really needed on display
+static mode - onb/off rf generator display/toggle to show it's on/off
+matplot lib
+Steps are integer not frequency division
+write class to hold freq/power
+
+goal is to use rest-like on some backend port interface with eric's thing.

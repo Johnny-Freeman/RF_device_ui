@@ -1,5 +1,7 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget
+from math import log
+from enum import Enum
 
 # ==============================================
 # Interacting with Children, Signals and Slots
@@ -42,6 +44,117 @@ def import_widget4(path):
 
 
 # ==============================================
+# Storing freq (in Hz) and power (in mW)
+# And converting between units
+# ==============================================
+class UNIT(Enum):
+	# Frequency units
+	HZ = "Hz"
+	KHZ = "KHz"
+	MHZ = "MHz"
+	GHZ = "GHz"
+	
+	# Power units
+	DBM = "dBm"
+	MIL = "mW"
+	W = "W"
+	
+	def __str__(self):
+		return self.value
+	
+	def _export(self):
+		return self.name
+	
+	@staticmethod
+	def _import(input_string):
+		return UNIT[input_string]
+
+class Freq():
+	@staticmethod
+	def convert_to_Hz(value, unit):
+		if unit == UNIT.HZ:
+			return float(value)
+		elif unit == UNIT.KHZ:
+			return float(value)*1000.0
+		elif unit == UNIT.MHZ:
+			return float(value)*1000000.0
+		elif unit == UNIT.GHZ:
+			return float(value)*1000000000.0
+		else:
+			raise TypeError("input unit must be of UNIT() enum type")
+	
+	@staticmethod
+	def convert_to_unit(hz_value, unit):
+		if unit == UNIT.HZ:
+			return float(hz_value)
+		elif unit == UNIT.KHZ:
+			return float(hz_value)/1000.0
+		elif unit == UNIT.MHZ:
+			return float(hz_value)/1000000.0
+		elif unit == UNIT.GHZ:
+			return float(hz_value)/1000000000.0
+		else:
+			raise TypeError("input unit must be of UNIT() enum type")
+	
+	def __init__(self, value, input_unit):
+		self.hz_value = Freq.convert_to_Hz(value, input_unit)
+	
+	def get(self, desired_unit):
+		return Freq.convert_to_unit(self.hz_value, desired_unit)
+	read = cast = get
+	
+	def _export(self):
+		return self.hz_value
+	
+	@staticmethod
+	def _import(value):
+		return Freq(value, UNIT.HZ)
+
+class Power():
+	# https://www.rapidtables.com/convert/power/Watt_to_dBm.html
+	@staticmethod
+	def convert_to_mW(value, unit):
+		if unit == UNIT.MIL:
+			return float(value)
+		elif unit == UNIT.W:
+			return float(value) *1000.0
+		elif unit == UNIT.DBM:
+			return pow(10.0, float(value)/10.0)
+		else:
+			raise TypeError("input unit must be of UNIT() enum type")
+
+
+	@staticmethod
+	def convert_to_unit(mil_value, unit):
+		if unit == UNIT.MIL:
+			return float(mil_value)
+		elif unit == UNIT.W:
+			return float(mil_value) /1000.0
+		elif unit == UNIT.DBM:
+			return 10.0 * log(float(mil_value),10.0)
+		else:
+			raise TypeError("input unit must be of UNIT() enum type")
+	
+	def __init__(self, value, input_unit):
+		# Minimum value to handle negative infinity dBm
+		if input_unit == UNIT.MIL:
+			value = max(value, 0.001)
+		
+		self.mil_value = Power.convert_to_mW(value, input_unit)
+	
+	def get(self, desired_unit):
+		return Power.convert_to_unit(self.mil_value, desired_unit)
+	read = cast = get
+	
+	def _export(self):
+		return self.mil_value
+	
+	@staticmethod
+	def _import(value):
+		return Power(value, UNIT.MIL)
+
+
+# ==============================================
 # Session managers
 # ==============================================
 class Generator_State():
@@ -50,14 +163,18 @@ class Generator_State():
 		# Defaults
 		self.rf_on = False
 		
-		self.freq = 0 # always in Hz
-		self.freq_unit = "HZ"
-		
-		self.pwr = 0
-		self.pwr_unit = "W"
-		
+		self.output_freq = Freq(0, UNIT.GHZ)
+		self.output_power = Power(0, UNIT.DBM)
+			
 		self.vco_lock = False
 		self.pll_lock = False
+		
+		# Profilable
+		self.target_freq = Freq(0, UNIT.GHZ)
+		self.freq_unit = UNIT.GHZ
+		
+		self.target_power = Power(0, UNIT.DBM)
+		self.power_unit = UNIT.DBM
 		
 		if config:
 			self._import(config)
@@ -65,55 +182,77 @@ class Generator_State():
 	# --------------------------
 	# Helper functions
 	# --------------------------
-	def set_target_freq(self, value, freq_unit):
-		if freq_unit.upper() == "HZ":
-			self.freq = float(value)
-		elif freq_unit.upper() == "KHZ":
-			self.freq = float(value * 1000.0)
-		elif freq_unit.upper() == "MHZ":
-			self.freq = float(value * 1000000.0)
-		else: #GHZ
-			self.freq = float(value * 1000000000.0)
+	# Frequency
+	def set_target_freq(self, value, freq_unit=None):
+		if freq_unit:
+			self.target_freq = Freq(value, freq_unit)
+		
+		elif type(value) in (float, int):
+			raise TypeError("Numeric input values must be paired with freq_unit = <UNIT(enum)> type")
+			
+		else:
+			self.target_freq = value
 	
 	def set_freq_unit(self, freq_unit):
-		self.freq_unit = freq_unit.upper()
+		self.freq_unit = freq_unit
 	
 	def get_target_freq(self):
-		value = self.freq
-		if self.freq_unit.upper() == "HZ":
-			pass
-		elif self.freq_unit.upper() == "KHZ":
-			value/=1000.0
-		elif self.freq_unit.upper() == "MHZ":
-			value/=1000000.0
-		else: #GHZ
-			value/=1000000000.0
-		
-		return value, self.freq_unit.upper()
+		return self.target_freq
+	
+	def get_freq_unit(self):
+		return self.freq_unit
 	
 	def get_target_freq_string(self):
-		value, freq_unit = self.get_target_freq()
-		return str(value)+ " " + freq_unit[:-1] + freq_unit[-1].lower()
+		return str( self.target_freq.cast(self.freq_unit) )+ " " + str(self.freq_unit)
+	
+	def get_output_freq_string(self):
+		return str( self.output_freq.cast(self.freq_unit) )+ " " + str(self.freq_unit)
+	
+	# Power
+	def set_target_power(self, value, power_unit=None):
+		if power_unit:
+			self.target_power = Power(value, power_unit)
+		
+		elif type(value) in (float, int):
+			raise TypeError("Numeric input values must be paired with power_unit = <UNIT(enum)> type")
+			
+		else:
+			self.target_power = value
+	
+	def set_power_unit(self, power_unit):
+		self.power_unit = power_unit
+	
+	def get_target_power(self):
+		return self.target_power
+	
+	def get_power_unit(self):
+		return self.power_unit
+	
+	def get_target_power_string(self):
+		return str( self.target_power.cast(self.power_unit) )+ " " + str(self.power_unit)
+	
+	def get_output_power_string(self):
+		return str( self.output_power.cast(self.power_unit) )+ " " + str(self.power_unit)
 	
 	# --------------------------
 	# import / export
 	# --------------------------
 	def _export(self):
 		_dict = {
-			"freq" : self.freq,
-			"freq_unit" : self.freq_unit,	
+			"target_freq" : self.target_freq._export(),
+			"freq_unit" : self.freq_unit._export(),
 			
-			"pwr" : self.pwr,
-			"pwr_unit" : self.pwr_unit,
+			"target_power" : self.target_power._export(),
+			"power_unit" : self.power_unit._export(),
 		}
 		return _dict
 		
 	def _import(self, config):
-		self.freq = config["freq"]
-		self.freq_unit = config["freq_unit"]
+		self.target_freq = Freq._import( config["target_freq"] )
+		self.freq_unit = UNIT._import( config["freq_unit"] )
 		
-		self.pwr = config["pwr"]
-		self.pwr_unit = config["pwr_unit"]
+		self.target_power = Power._import( config["target_power"] )
+		self.power_unit = UNIT._import( config["power_unit"] )
 
 class Detector_State():
 	# Holds state of detector tab
@@ -121,21 +260,19 @@ class Detector_State():
 		# Defaults
 		self.mode = "STATIC" #STATIC/SWEEP
 		
-		self.start_freq = 0
-		self.start_freq_unit = "HZ"
+		self.start_freq = Freq(0, UNIT.GHZ)
+		self.start_freq_unit = UNIT.GHZ
 		
-		self.stop_freq = 0
-		self.stop_freq_unit = "HZ"
+		self.stop_freq = Freq(0, UNIT.GHZ)
+		self.stop_freq_unit = UNIT.GHZ
 		
-		self.step_size = 0
-		self.step_size_unit = "HZ"
+		self.num_steps = 0
 		
-		self.pwr = 0
-		self.pwr_unit = "W"
+		self.power = Power(0, UNIT.DBM)
+		self.power_unit = UNIT.DBM
 		
 		if config:
 			self._import(config)
-	
 	
 	# --------------------------
 	# Helper functions
@@ -149,34 +286,32 @@ class Detector_State():
 		_dict = {
 			"mode" : self.mode,
 			
-			"start_freq" : self.start_freq,
-			"start_freq_unit" : self.start_freq_unit,
+			"start_freq" : self.start_freq._export(),
+			"start_freq_unit" : self.start_freq_unit._export(),
 			
-			"stop_freq" : self.stop_freq,
-			"stop_freq_unit" : self.stop_freq_unit,
+			"stop_freq" : self.stop_freq._export(),
+			"stop_freq_unit" : self.stop_freq_unit._export(),
 			
-			"step_size" : self.step_size,
-			"step_size_unit" : self.step_size_unit,
+			"num_steps" : self.num_steps,
 			
-			"pwr" : self.pwr,
-			"pwr_unit" : self.pwr_unit,
+			"power" : self.power._export(),
+			"power_unit" : self.power_unit._export(),
 		}
 		return _dict
 		
 	def _import(self, config):
 		self.mode = config["mode"]
 		
-		self.start_freq = config["start_freq"]
-		self.start_freq_unit = config["start_freq_unit"]
+		self.start_freq = Freq._import( config["start_freq"] )
+		self.start_freq_unit = UNIT._import( config["start_freq_unit"] )
 		
-		self.stop_freq = config["stop_freq"]
-		self.stop_freq_unit = config["stop_freq_unit"]
+		self.stop_freq = Freq._import(config["stop_freq"])
+		self.stop_freq_unit = UNIT._import(config["stop_freq_unit"] )
 		
-		self.step_size = config["step_size"]
-		self.step_size_unit = config["step_size_unit"]
+		self.num_steps = config["num_steps"]
 		
-		self.pwr = config["pwr"]
-		self.pwr_unit = config["pwr_unit"]
+		self.power = Power._import( config["power"])
+		self.power_unit = UNIT._import(config["power_unit"] )
 
 class Network_State():
 	# Holds Network Settings
