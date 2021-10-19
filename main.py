@@ -4,6 +4,7 @@ import os
 
 from set_freq import QDialog_Set_Freq
 from set_pwr import QDialog_Set_Power
+from set_num import QDialog_Set_Number
 from classes import import_widget4, Echo_Session, UNIT
 
 # ==============================================
@@ -94,8 +95,15 @@ class main_menu(b):
 			# -------------------------
 			# Detector
 			# -------------------------
+			# Toggle between Static and Sweep mode
 			self.getChild('btn_toggle_static_mode').clicked.connect(self.set_detector_mode)			
-			self.getChild('btn_toggle_sweep_mode').clicked.connect(self.set_detector_mode)	
+			self.getChild('btn_toggle_sweep_mode').clicked.connect(self.set_detector_mode)
+			
+			# 
+			self.getChild('btn_sweep_start_freq').clicked.connect(self.set_sweep_start_freq)
+			self.getChild('btn_sweep_stop_freq').clicked.connect(self.set_sweep_stop_freq)
+			self.getChild('btn_sweep_num_steps').clicked.connect(self.set_sweep_num_steps)
+			self.getChild('btn_sweep_pwr').clicked.connect(self.set_sweep_power)
 			
 			# -------------------------
 			# Settings / Network
@@ -220,6 +228,77 @@ class main_menu(b):
 		# -------------------------
 		# Sweep settings
 		# -------------------------
+		def set_sweep_start_freq(self):
+			w = QDialog_Set_Freq(initial_value=self.state.detector.start_freq, freq_unit=self.state.detector.start_freq_unit)
+			w.exec_()
+						
+			result = w.result()
+			bool_set = result[1]
+			obj_value = result[0][0]
+			obj_unit = result[0][1]
+				
+			if bool_set:
+				# Update detector
+				self.state.detector.set_sweep_start_freq(obj_value, obj_unit)
+				self.display_detector_sweep_settings()
+			else:
+				pass
+			
+		def set_sweep_stop_freq(self):
+			w = QDialog_Set_Freq(initial_value=self.state.detector.stop_freq, freq_unit=self.state.detector.stop_freq_unit)
+			w.exec_()
+						
+			result = w.result()
+			bool_set = result[1]
+			obj_value = result[0][0]
+			obj_unit = result[0][1]
+				
+			if bool_set:
+				# Update detector
+				self.state.detector.set_sweep_stop_freq(obj_value, obj_unit)
+				self.display_detector_sweep_settings()
+			else:
+				pass
+		
+		def set_sweep_num_steps(self):
+			w = QDialog_Set_Number(initial_value=self.state.detector.num_steps)
+			w.exec_()
+						
+			result = w.result()
+			bool_set = result[1]
+			int_value = result[0]
+				
+			if bool_set:
+				# Update detector
+				self.state.detector.set_sweep_num_steps(int_value)
+				self.display_detector_sweep_settings()
+			else:
+				pass
+		
+		def set_sweep_power(self):
+			w = QDialog_Set_Power(initial_value=self.state.detector.power, power_unit=self.state.detector.power_unit)
+			w.exec_()
+						
+			result = w.result()
+			bool_set = result[1]
+			obj_value = result[0][0]
+			obj_unit = result[0][1]
+				
+			if bool_set:
+				# Update detector
+				self.state.detector.set_sweep_power(obj_value, obj_unit)
+				self.display_detector_sweep_settings()
+			else:
+				pass
+		
+		# -------------------------
+		# Display Detector Outputs
+		# -------------------------
+		def display_detector_sweep_settings(self):
+			self.getChild('lbl_sweep_start_freq').setText(self.state.detector.get_sweep_start_freq_string())
+			self.getChild('lbl_sweep_stop_freq').setText(self.state.detector.get_sweep_stop_freq_string())
+			self.getChild('lbl_sweep_num_steps').setText(str(self.state.detector.num_steps))
+			self.getChild('lbl_sweep_pwr').setText(self.state.detector.get_sweep_power_string())
 		
 		# =================================================
 		# Settings / Network

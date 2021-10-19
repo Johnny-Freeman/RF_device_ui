@@ -22,6 +22,11 @@ https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html
 	https://doc.qt.io/qt-5/qwidget.html#pos-prop
 	https://doc.qt.io/qt-5/qwindow.html#QWindow-1
 
+# QlineEdits, editing, focus and equivalent keyboard events
+https://stackoverflow.com/questions/6452077/how-to-get-click-event-of-qlineedit-in-qt
+https://stackoverflow.com/questions/2804115/how-to-connect-focus-event-from-qlineedit
+https://stackoverflow.com/questions/2035310/how-can-i-simulate-user-interaction-key-press-event-in-qt/2035547
+^^ ignoring for MVP for now, deffinitely better method of inputing button clicks
 
 # Tabs and Full screen
 how-to

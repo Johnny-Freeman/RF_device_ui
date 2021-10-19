@@ -25,14 +25,14 @@ def _getRoot(relative=True):
 	root = os.path.dirname(os.path.abspath(module.__file__))
 	return root
 
-path = _getRoot() + """/ui/set_ip.ui"""
+path = _getRoot() + """/ui/set_num.ui"""
 
 # ==============================================
-# Widget dialog to get power input
+# Widget dialog to get number
 # ==============================================
 b = import_widget4(path)
-class QDialog_Set_IP(b):			
-		def __init__(self, parent=None, initial_value="0.0.0.0"):
+class QDialog_Set_Number(b):			
+		def __init__(self, parent=None, initial_value=0):
 			super().__init__(parent)
 			
 			# Situate Window
@@ -42,8 +42,9 @@ class QDialog_Set_IP(b):
 			# not sure if this is best method
 			# depends on backend implimentation
 			self.state = {
-				"reset_value"	: initial_value,
-				"input_value"	: "0.0.0.0",
+				"reset_value"	: str(initial_value),
+				"input_value"	: "0",
+			}
 			
 			# display zeros
 			self.update_display()
@@ -86,12 +87,6 @@ class QDialog_Set_IP(b):
 			
 			# keyboard text input
 			self.getChild('input_txt_num').textChanged.connect(self.keyboard_text_input_changed)
-			
-			# Radio buttons, freq choice
-			# WIP
-			self.getChild('btn_dBm').clicked.connect(self.click_btn_num_1)
-			self.getChild('btn_mW').clicked.connect(self.click_btn_num_1)
-			self.getChild('btn_W').clicked.connect(self.click_btn_num_1)
 		
 		# ------------------
 		# Keypad
@@ -149,9 +144,8 @@ class QDialog_Set_IP(b):
 			self.value_update(test_value)
 		
 		def click_btn_num_back(self):
-			if len(self.state["input_value"] > 0):
-				test_value = self.state["input_value"][:-1]
-				self.value_update(test_value)
+			test_value = self.state["input_value"][:-1]
+			self.value_update(test_value)
 		
 		def click_btn_num_CC(self):
 			test_value = "0"
@@ -160,6 +154,7 @@ class QDialog_Set_IP(b):
 		def click_btn_reset(self):
 			self.value_update(self.state["reset_value"])
 		
+		
 		# ------------------
 		# Updates
 		# ------------------
@@ -167,10 +162,15 @@ class QDialog_Set_IP(b):
 			# automatic zero
 			if test_string == "":
 				self.state["input_value"] = "0"
+				
+			# ints only
+			elif "." in test_string:
+				# do not continue
+				pass
 			
 			else:
 				try:
-					float(test_string)
+					int(test_string)
 					
 					# remove leading zeros
 					if float(test_string) >= 1.0 and test_string[0] == "0":
@@ -190,11 +190,11 @@ class QDialog_Set_IP(b):
 				# check duplicate loop
 				return
 			
-			# else test input if valid float
+			# else test input if valid int
 			self.value_update(str_value)
 		
 		def update_display(self):
-			self.getChild('input_txt_num').setText(str(self.state["input_value"]))
+			self.getChild('input_txt_num').setText( self.state["input_value"] )
 		
 		# ------------------
 		# Callback
@@ -204,16 +204,16 @@ class QDialog_Set_IP(b):
 			# looked into QInputDialog's source code to see how they do it, but this is better
 			result = super().result()
 			if result:
-				return self.state["input_value"]), True
+				return int(self.state["input_value"]), True
 			else:
-				return (None, None), False
+				return None, False
 
 
 if __name__ == "__main__":
 	from PyQt5.QtWidgets import QApplication
 	app = QApplication([])
 	
-	new_widget = QDialog_Set_IP()
+	new_widget = QDialog_Set_Number()
 	new_widget.exec_()
 	
 	print(new_widget.result())

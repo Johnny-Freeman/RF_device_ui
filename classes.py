@@ -187,7 +187,7 @@ class Generator_State():
 		if freq_unit:
 			self.target_freq = Freq(value, freq_unit)
 		
-		elif type(value) in (float, int):
+		elif type(value) in (float, int, str):
 			raise TypeError("Numeric input values must be paired with freq_unit = <UNIT(enum)> type")
 			
 		else:
@@ -277,7 +277,33 @@ class Detector_State():
 	# --------------------------
 	# Helper functions
 	# --------------------------
+	# start freq
+	def set_sweep_start_freq(self, value, freq_unit):
+		self.start_freq = value
+		self.start_freq_unit = freq_unit
 	
+	def get_sweep_start_freq_string(self):
+		return str(self.start_freq.cast(self.start_freq_unit)) + " " + str(self.start_freq_unit)
+	
+	# stop freq
+	def set_sweep_stop_freq(self, value, freq_unit):
+		self.stop_freq = value
+		self.stop_freq_unit = freq_unit
+		
+	def get_sweep_stop_freq_string(self):
+		return str(self.stop_freq.cast(self.stop_freq_unit)) + " " + str(self.stop_freq_unit)
+	
+	# sweep steps
+	def set_sweep_num_steps(self, num_steps):
+		self.num_steps = num_steps
+	
+	# sweep power
+	def set_sweep_power(self, value, power_unit):
+		self.power = value
+		self.power_unit = power_unit
+	
+	def get_sweep_power_string(self):
+		return str(self.power.cast(self.power_unit)) + " " + str(self.power_unit)
 	
 	# --------------------------
 	# import / export

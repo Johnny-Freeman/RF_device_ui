@@ -26,7 +26,7 @@
     <string>1</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="txt_input">
+  <widget class="QLineEdit" name="input_txt_num">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -39,10 +39,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>0</string>
+    <string>00000.0</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_num_2">
@@ -151,7 +151,7 @@
   </widget>
   <widget class="QPushButton" name="btn_num_decimal">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -254,6 +254,25 @@
    </property>
    <property name="text">
     <string>RESET</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lbl_unit">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>20</y>
+     <width>47</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_cancel">
