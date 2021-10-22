@@ -43,7 +43,8 @@ class QDialog_Set_IP(b):
 			# depends on backend implimentation
 			self.state = {
 				"reset_value"	: initial_value,
-				"input_value"	: "0.0.0.0",
+				"input_value"	: initial_value,
+			}
 			
 			# display zeros
 			self.update_display()
@@ -85,13 +86,7 @@ class QDialog_Set_IP(b):
 			self.getChild('btn_reset').clicked.connect(self.click_btn_reset)
 			
 			# keyboard text input
-			self.getChild('input_txt_num').textChanged.connect(self.keyboard_text_input_changed)
-			
-			# Radio buttons, freq choice
-			# WIP
-			self.getChild('btn_dBm').clicked.connect(self.click_btn_num_1)
-			self.getChild('btn_mW').clicked.connect(self.click_btn_num_1)
-			self.getChild('btn_W').clicked.connect(self.click_btn_num_1)
+			self.getChild('input_txt').textChanged.connect(self.keyboard_text_input_changed)
 		
 		# ------------------
 		# Keypad
@@ -149,12 +144,12 @@ class QDialog_Set_IP(b):
 			self.value_update(test_value)
 		
 		def click_btn_num_back(self):
-			if len(self.state["input_value"] > 0):
+			if len(self.state["input_value"]) > 0:
 				test_value = self.state["input_value"][:-1]
 				self.value_update(test_value)
 		
 		def click_btn_num_CC(self):
-			test_value = "0"
+			test_value = ""
 			self.value_update(test_value)
 		
 		def click_btn_reset(self):
@@ -163,29 +158,41 @@ class QDialog_Set_IP(b):
 		# ------------------
 		# Updates
 		# ------------------
-		def value_update(self, test_string):
-			# automatic zero
-			if test_string == "":
-				self.state["input_value"] = "0"
-			
+		def valid_ip_address(self, test_string):
+			if test_string.count(".") == 3:
+				list_chunks = test_string.split(".")
+				for chunk in list_chunks:
+					if len(chunk) > 3:
+						return False
+					
+					try:
+						int(chunk)
+					except:
+						return False
+					
+					if int(chunk) > 255 or int(chunk) < 0:
+						return False
 			else:
-				try:
-					float(test_string)
-					
-					# remove leading zeros
-					if float(test_string) >= 1.0 and test_string[0] == "0":
-						test_string = test_string.lstrip("0")
-					
-					self.state["input_value"] = test_string
-				except:
-					pass
+				return False
+			
+			return True
+			
+		def value_update(self, test_string):
+			# When working with ip, all strings are valid inputs
+			self.state["input_value"] = test_string
+			
+			# Check if input is an ip and enable set button
+			if self.valid_ip_address(test_string):
+				self.getChild("btn_set").setEnabled(True)
+			else:
+				self.getChild("btn_set").setEnabled(False)
 			
 			# update display
 			self.update_display()
 		
 		def keyboard_text_input_changed(self):
 			# str_value<str>
-			str_value = self.getChild('input_txt_num').text()
+			str_value = self.getChild('input_txt').text()
 			if str_value == self.state["input_value"]:
 				# check duplicate loop
 				return
@@ -194,7 +201,7 @@ class QDialog_Set_IP(b):
 			self.value_update(str_value)
 		
 		def update_display(self):
-			self.getChild('input_txt_num').setText(str(self.state["input_value"]))
+			self.getChild('input_txt').setText( self.state["input_value"] )
 		
 		# ------------------
 		# Callback
@@ -204,9 +211,9 @@ class QDialog_Set_IP(b):
 			# looked into QInputDialog's source code to see how they do it, but this is better
 			result = super().result()
 			if result:
-				return self.state["input_value"]), True
+				return self.state["input_value"], True
 			else:
-				return (None, None), False
+				return None, False
 
 
 if __name__ == "__main__":

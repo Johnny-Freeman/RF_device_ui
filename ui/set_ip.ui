@@ -26,7 +26,7 @@
     <string>1</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="txt_input">
+  <widget class="QLineEdit" name="input_txt">
    <property name="enabled">
     <bool>true</bool>
    </property>

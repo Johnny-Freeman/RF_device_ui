@@ -5,6 +5,7 @@ import os
 from set_freq import QDialog_Set_Freq
 from set_pwr import QDialog_Set_Power
 from set_num import QDialog_Set_Number
+from set_ip import QDialog_Set_IP
 from classes import import_widget4, Echo_Session, UNIT
 
 # ==============================================
@@ -30,6 +31,19 @@ def _getRoot(relative=True):
 	return root
 
 path = _getRoot() + """/ui/main_1.ui"""
+
+
+# ==============================================
+# Backend Data? TBD on how to grab data
+# ==============================================
+from random import uniform
+def get_sweep_data():
+	# monkey wrench
+	x = [i for i in range(100)]
+	y = [uniform(0.8*float(i), 1.2*float(i)) for i in range(100)]
+	print(y)
+	return x,y
+
 
 # ==============================================
 # Main Application
@@ -108,8 +122,14 @@ class main_menu(b):
 			# -------------------------
 			# Settings / Network
 			# -------------------------
+			# Static / Dynamic Toggle
 			self.getChild("rbtn_dynamic_ip").clicked.connect(self.set_network_mode)
 			self.getChild("rbtn_static_ip").clicked.connect(self.set_network_mode)
+			
+			# Userset
+			self.getChild("btn_set_ip_address").clicked.connect(self.set_ip_address)
+			self.getChild("btn_set_netmask").clicked.connect(self.set_netmask)
+			self.getChild("btn_set_gateway").clicked.connect(self.set_gateway)
 		
 		# =================================================
 		# Generator
@@ -220,10 +240,21 @@ class main_menu(b):
 		
 		def init_detector_static_mode(self):
 			self.getChild("grp_sweep_controls").setEnabled(False)
+			
+			# enable static frame
+			self.getChild("frame_detector_static").setEnabled(True)
+			self.getChild("frame_detector_static").setVisible(True)
+			self.getChild("frame_detector_sweep").setEnabled(False)
+			self.getChild("frame_detector_sweep").setVisible(False)
 		
 		def init_detector_sweep_mode(self):
 			self.getChild("grp_sweep_controls").setEnabled(True)
 			
+			# enable sweep frame
+			self.getChild("frame_detector_static").setEnabled(False)
+			self.getChild("frame_detector_static").setVisible(False)
+			self.getChild("frame_detector_sweep").setEnabled(True)
+			self.getChild("frame_detector_sweep").setVisible(True)
 		
 		# -------------------------
 		# Sweep settings
@@ -311,23 +342,71 @@ class main_menu(b):
 		
 		def set_dynamic_ip(self):
 			self.getChild("frame_network_input_settings").setEnabled(False)
+			self.state.network.auto_ip = True
 			
 		def set_static_ip(self):
 			self.getChild("frame_network_input_settings").setEnabled(True)
+			self.state.network.auto_ip = False
 			
 		# -------------------------
 		# static ip settings
 		# -------------------------
 		def set_ip_address(self):
-			pass
+			w = QDialog_Set_IP(initial_value=self.state.network.ip_address)
+			w.exec_()
+						
+			result = w.result()
+			bool_set = result[1]
+			str_value = result[0]
+				
+			if bool_set:
+				# Update network
+				self.state.network.ip_address = str_value
+				self.display_network_settings()
+			else:
+				pass
 		
 		def set_netmask(self):
-			pass
+			w = QDialog_Set_IP(initial_value=self.state.network.netmask)
+			w.exec_()
+						
+			result = w.result()
+			bool_set = result[1]
+			str_value = result[0]
+				
+			if bool_set:
+				# Update network
+				self.state.network.netmask = str_value
+				self.display_network_settings()
+			else:
+				pass
 		
 		def set_gateway(self):
-			pass
+			w = QDialog_Set_IP(initial_value=self.state.network.gateway)
+			w.exec_()
+						
+			result = w.result()
+			bool_set = result[1]
+			str_value = result[0]
+				
+			if bool_set:
+				# Update network
+				self.state.network.gateway = str_value
+				self.display_network_settings()
+			else:
+				pass
+		
+		# -------------------------
+		# Display Network Settings
+		# -------------------------
+		def display_network_settings(self):
+			self.getChild("txt_ip_address").setText(self.state.network.ip_address)
+			self.getChild("txt_netmask").setText(self.state.network.netmask)
+			self.getChild("txt_gateway").setText(self.state.network.gateway)
 
 def main():
+	get_sweep_data()
+	input()
 	app = QApplication([])
 	
 	m = main_menu()

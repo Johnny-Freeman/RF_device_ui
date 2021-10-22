@@ -343,9 +343,9 @@ class Network_State():
 	# Holds Network Settings
 	def __init__(self, config = None):
 		self.auto_ip = True
-		self.ip_address = "0.0.0.0"
-		self.netmask = "0.0.0.0"
-		self.gateway = "0.0.0.0"
+		self.ip_address = "192.168.1.1"
+		self.netmask = "192.168.1.1"
+		self.gateway = "192.168.1.1"
 		
 		if config:
 			self._import(config)
