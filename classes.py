@@ -16,7 +16,9 @@ def import_widget4(path):
 		def getChild(self, regex_name):
 			# returns child, quick and simple
 			# QWidget is the most basic of classes and will search through all widgets.
-			return self.findChild(QWidget, regex_name)
+			if not regex_name in self.lookup_index:
+				self.lookup_index[regex_name] = self.findChild(QWidget, regex_name)
+			return self.lookup_index[regex_name]
 		
 		def getChildren(self, regex_name):
 			# returns list of children, quick and simple
@@ -29,6 +31,9 @@ def import_widget4(path):
 			# this method is composition
 			ui = Widget_Ui()
 			ui.setupUi(self)
+			
+			# Index to speed up child finding
+			self.lookup_index = {}
 			
 			# PlaceHolder
 			self.ConnectSignalsAndSlots()
@@ -165,8 +170,7 @@ class Generator_State():
 		
 		self.output_freq = Freq(0, UNIT.GHZ)
 		self.output_power = Power(0, UNIT.DBM)
-			
-		self.vco_lock = False
+		
 		self.pll_lock = False
 		
 		# Profilable
@@ -257,7 +261,10 @@ class Generator_State():
 class Detector_State():
 	# Holds state of detector tab
 	def __init__(self, config=None):
-		# Defaults
+		# Readouts
+		self.output = 0
+		
+		# Defaults / Profileable
 		self.mode = "STATIC" #STATIC/SWEEP
 		
 		self.start_freq = Freq(0, UNIT.GHZ)

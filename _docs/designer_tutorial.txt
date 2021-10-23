@@ -46,6 +46,11 @@ https://stackoverflow.com/questions/12472817/qt-squared-radio-button
 	https://www.youtube.com/watch?v=qwzapIxXRSQ
 	#QCustomPlot 
 	https://www.youtube.com/watch?v=lXXUxy5Opds&t=2s
+	
+# Live data can be accomplished either through threads in an init, or through Qtim
+	# QTimer https://stackoverflow.com/questions/10677462/is-there-a-pyqt-equivalent-to-wx-futurecall-calling-a-function-after-window-is
+	# https://stackoverflow.com/questions/4098131/how-to-update-a-plot-in-matplotlib
+	As python locks threads, best to just use a QTimer
 
 # =====================================
 # Download

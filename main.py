@@ -6,6 +6,7 @@ from set_freq import QDialog_Set_Freq
 from set_pwr import QDialog_Set_Power
 from set_num import QDialog_Set_Number
 from set_ip import QDialog_Set_IP
+from sweep_plot import QMatplot_Static
 from classes import import_widget4, Echo_Session, UNIT
 
 # ==============================================
@@ -41,7 +42,6 @@ def get_sweep_data():
 	# monkey wrench
 	x = [i for i in range(100)]
 	y = [uniform(0.8*float(i), 1.2*float(i)) for i in range(100)]
-	print(y)
 	return x,y
 
 
@@ -57,9 +57,13 @@ class main_menu(b):
 			
 			# Application State
 			self.state = Echo_Session()
+			self.set_detector_mode()
 			
 			# Style Sheets
 			self.load_stylesheets()
+			
+			# Initiate Loops
+			self.LOOP()
 			
 		def load_stylesheets(self):
 			# load tab style sheets
@@ -76,6 +80,10 @@ class main_menu(b):
 			# https://doc.qt.io/qt-5/qtwidgets-widgets-windowflags-example.html
 			self.setWindowFlags(QtCore.Qt.FramelessWindowHint) # requires QtCore, but more control
 			# self.showFullScreen()
+			
+			# Adding matplotlib Graph
+			x,y = get_sweep_data()
+			self.figure = QMatplot_Static(x,y, parent=self.getChild('frame_detector_sweep') )
 			
 		def ConnectSignalsAndSlots(self, *args, **kwargs):
 			# Reserved PlaceHolder, override at will.
@@ -113,7 +121,7 @@ class main_menu(b):
 			self.getChild('btn_toggle_static_mode').clicked.connect(self.set_detector_mode)			
 			self.getChild('btn_toggle_sweep_mode').clicked.connect(self.set_detector_mode)
 			
-			# 
+			# Sweep options
 			self.getChild('btn_sweep_start_freq').clicked.connect(self.set_sweep_start_freq)
 			self.getChild('btn_sweep_stop_freq').clicked.connect(self.set_sweep_stop_freq)
 			self.getChild('btn_sweep_num_steps').clicked.connect(self.set_sweep_num_steps)
@@ -331,6 +339,9 @@ class main_menu(b):
 			self.getChild('lbl_sweep_num_steps').setText(str(self.state.detector.num_steps))
 			self.getChild('lbl_sweep_pwr').setText(self.state.detector.get_sweep_power_string())
 		
+		def display_detector_static_output_freq(self):
+			self.getChild('lbl_detector_static_big_readout').setText(str(self.state.detector.output))
+		
 		# =================================================
 		# Settings / Network
 		# =================================================
@@ -404,13 +415,59 @@ class main_menu(b):
 			self.getChild("txt_netmask").setText(self.state.network.netmask)
 			self.getChild("txt_gateway").setText(self.state.network.gateway)
 
+		# -------------------------
+		# Loops
+		# -------------------------
+		def LOOP(self):
+			# Check if features are enabled before updating
+			if self.state.detector.mode == "SWEEP":
+				self.update_sweep_data()
+			else:
+				self.update_static_data()
+			
+			# End Loop
+			QtCore.QTimer.singleShot(20, self.LOOP)
+		
+		def update_sweep_data(self):
+			x,y = get_sweep_data()
+			self.figure.line_objects.set_xdata(x)
+			self.figure.line_objects.set_ydata(y)
+			
+			# Redraw/display
+			self.figure.draw()
+			self.figure.flush_events()
+			# print("sweep beat")
+		
+		def update_static_data(self):
+			x,y = get_sweep_data()
+			self.state.detector.output = y[-1]
+			
+			# display
+			self.display_detector_static_output_freq()
+		
+		# -------------------------
+		# Get monkey data
+		# -------------------------
+		def update_information(self):
+			# something about downloading and storing fake data
+			pass
+			
+class Future_Socket_Class():
+	pass
+
 def main():
-	get_sweep_data()
-	input()
 	app = QApplication([])
 	
 	m = main_menu()
 	m.show()
+	
+	# Nope, polling outside of show doesn't seem to work
+	# import time
+	# x = 1
+	# while(1):
+	# 	print(str(x))
+	# 	x+=1
+	# 	time.sleep(1)
 	
 	app.exec_()
 

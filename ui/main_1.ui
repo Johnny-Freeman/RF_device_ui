@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>813</width>
-    <height>886</height>
+    <height>513</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,7 +39,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -658,6 +658,22 @@
        </property>
       </widget>
      </widget>
+     <widget class="QFrame" name="frame_detector_sweep">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>561</width>
+        <height>401</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -1014,22 +1030,6 @@
       <string>Telemetry</string>
      </attribute>
     </widget>
-   </widget>
-   <widget class="QFrame" name="frame_detector_sweep">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>460</y>
-      <width>561</width>
-      <height>401</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
