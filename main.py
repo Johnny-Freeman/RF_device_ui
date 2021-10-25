@@ -48,6 +48,16 @@ def get_sweep_data():
 # ==============================================
 # Main Application
 # ==============================================
+def get_stylesheet(*paths):
+	full_string = ""
+	
+	for path in paths:
+		ofile = open(path,"r")
+		lines = ofile.read()
+		full_string = full_string + "\n" + lines
+	
+	return full_string
+
 b = import_widget4(path)
 class main_menu(b):			
 		def __init__(self, parent=None):
@@ -70,10 +80,7 @@ class main_menu(b):
 			# self.getChild('tabWidget').setStyleSheet("QTabBar::tab { height: 40px; width: 120px; }")
 			
 			# General stylesheet
-			stylesheet = """
-				QTabBar::tab { height: 40px; width: 120px; }
-			"""
-			self.setStyleSheet(stylesheet)
+			self.setStyleSheet(get_stylesheet( _getRoot()+"/css/theme.css", _getRoot()+"/css/buttons.css" ))
 			
 		def window_setup(self):
 			# https://stackoverflow.com/questions/7021502/pyqt-remove-the-programs-title-bar

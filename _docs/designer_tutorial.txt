@@ -21,6 +21,9 @@ https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html
 	# Possible child widget positioning
 	https://doc.qt.io/qt-5/qwidget.html#pos-prop
 	https://doc.qt.io/qt-5/qwindow.html#QWindow-1
+	
+	# Cheatsheet
+	
 
 # QlineEdits, editing, focus and equivalent keyboard events
 https://stackoverflow.com/questions/6452077/how-to-get-click-event-of-qlineedit-in-qt
