@@ -155,6 +155,7 @@ class main_menu(b):
 		# frequency
 		def input_user_freq(self):
 			w = QDialog_Set_Freq(initial_value=self.state.generator.target_freq, freq_unit=self.state.generator.freq_unit)
+			w.setStyleSheet(self.styleSheet())
 			w.exec_()
 						
 			result = w.result()
@@ -187,6 +188,7 @@ class main_menu(b):
 		# power
 		def input_user_power(self):
 			w = QDialog_Set_Power(initial_value=self.state.generator.target_power, power_unit=self.state.generator.power_unit)
+			w.setStyleSheet(self.styleSheet())
 			w.exec_()
 						
 			result = w.result()
@@ -276,6 +278,7 @@ class main_menu(b):
 		# -------------------------
 		def set_sweep_start_freq(self):
 			w = QDialog_Set_Freq(initial_value=self.state.detector.start_freq, freq_unit=self.state.detector.start_freq_unit)
+			w.setStyleSheet(self.styleSheet())
 			w.exec_()
 						
 			result = w.result()
@@ -292,6 +295,7 @@ class main_menu(b):
 			
 		def set_sweep_stop_freq(self):
 			w = QDialog_Set_Freq(initial_value=self.state.detector.stop_freq, freq_unit=self.state.detector.stop_freq_unit)
+			w.setStyleSheet(self.styleSheet())
 			w.exec_()
 						
 			result = w.result()
@@ -308,6 +312,7 @@ class main_menu(b):
 		
 		def set_sweep_num_steps(self):
 			w = QDialog_Set_Number(initial_value=self.state.detector.num_steps)
+			w.setStyleSheet(self.styleSheet())
 			w.exec_()
 						
 			result = w.result()
@@ -323,6 +328,7 @@ class main_menu(b):
 		
 		def set_sweep_power(self):
 			w = QDialog_Set_Power(initial_value=self.state.detector.power, power_unit=self.state.detector.power_unit)
+			w.setStyleSheet(self.styleSheet())
 			w.exec_()
 						
 			result = w.result()
@@ -371,6 +377,7 @@ class main_menu(b):
 		# -------------------------
 		def set_ip_address(self):
 			w = QDialog_Set_IP(initial_value=self.state.network.ip_address)
+			w.setStyleSheet(self.styleSheet())
 			w.exec_()
 						
 			result = w.result()
@@ -386,6 +393,7 @@ class main_menu(b):
 		
 		def set_netmask(self):
 			w = QDialog_Set_IP(initial_value=self.state.network.netmask)
+			w.setStyleSheet(self.styleSheet())
 			w.exec_()
 						
 			result = w.result()
@@ -401,6 +409,7 @@ class main_menu(b):
 		
 		def set_gateway(self):
 			w = QDialog_Set_IP(initial_value=self.state.network.gateway)
+			w.setStyleSheet(self.styleSheet())
 			w.exec_()
 						
 			result = w.result()
@@ -462,6 +471,8 @@ class main_menu(b):
 class Future_Socket_Class():
 	pass
 
+from PyQt5 import Qt
+import enum
 def main():
 	app = QApplication([])
 	

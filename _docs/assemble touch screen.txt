@@ -8,3 +8,17 @@ https://www.amazon.com/Raspberry-Touchscreen-Monitor-1024x600-Speakers/dp/B07S51
 
 
 Would appear the QT screen size (geometry) for rasbian 7-inch display is 800 x 450 units
+
+# regarding matplotlib and numpy issues:
+try updating numpy: sudo pip3 install -U numpy >> didn't work
+unisntalled
+deleted dist packages
+uninstalled again
+then ireinstall numpy
+
+# reinstalling numpy was not necesscary just a missign library:
+https://github.com/numpy/numpy/issues/14772
+sudo apt-get install libatlas-base-dev
+
+
+
