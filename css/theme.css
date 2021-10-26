@@ -1,6 +1,10 @@
 /********************************************************
 Base Widgets
 ********************************************************/
+QMainWindow {
+	
+}
+
 .QWidget, QDialog {
 	/* background-color: beige; */
 	background-color: #332604;
