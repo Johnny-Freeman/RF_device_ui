@@ -86,7 +86,10 @@ class main_menu(b):
 			# https://stackoverflow.com/questions/7021502/pyqt-remove-the-programs-title-bar
 			# https://doc.qt.io/qt-5/qtwidgets-widgets-windowflags-example.html
 			self.setWindowFlags(QtCore.Qt.FramelessWindowHint) # requires QtCore, but more control
-			# self.showFullScreen()
+			
+			# WIP MVP: remove and hardcode on prod
+			if not os.name == 'nt':
+				self.showFullScreen()
 			
 			# Adding matplotlib Graph
 			x,y = get_sweep_data()
@@ -471,8 +474,6 @@ class main_menu(b):
 class Future_Socket_Class():
 	pass
 
-from PyQt5 import Qt
-import enum
 def main():
 	app = QApplication([])
 	
