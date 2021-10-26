@@ -21,4 +21,3 @@ https://github.com/numpy/numpy/issues/14772
 sudo apt-get install libatlas-base-dev
 
 
-

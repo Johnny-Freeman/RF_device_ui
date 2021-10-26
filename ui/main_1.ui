@@ -39,25 +39,12 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Generator</string>
      </attribute>
-     <widget class="QPushButton" name="btn_exit">
-      <property name="geometry">
-       <rect>
-        <x>590</x>
-        <y>330</y>
-        <width>161</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Exit</string>
-      </property>
-     </widget>
      <widget class="QGroupBox" name="grp_rf_onoff">
       <property name="enabled">
        <bool>true</bool>
@@ -125,8 +112,8 @@
       <property name="geometry">
        <rect>
         <x>680</x>
-        <y>280</y>
-        <width>71</width>
+        <y>350</y>
+        <width>91</width>
         <height>31</height>
        </rect>
       </property>
@@ -136,13 +123,16 @@
       <property name="text">
        <string>OFF</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
-        <x>600</x>
-        <y>280</y>
-        <width>71</width>
+        <x>590</x>
+        <y>350</y>
+        <width>91</width>
         <height>31</height>
        </rect>
       </property>
@@ -151,6 +141,9 @@
       </property>
       <property name="text">
        <string>PLL Lock</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <widget class="QGroupBox" name="grp_output">
@@ -931,7 +924,7 @@
         <rect>
          <x>220</x>
          <y>30</y>
-         <width>71</width>
+         <width>41</width>
          <height>31</height>
         </rect>
        </property>
@@ -971,7 +964,7 @@
       <widget class="QLabel" name="lbl_tag_available_versions">
        <property name="geometry">
         <rect>
-         <x>340</x>
+         <x>300</x>
          <y>30</y>
          <width>61</width>
          <height>31</height>
@@ -984,9 +977,9 @@
       <widget class="QLabel" name="lbl_version_2">
        <property name="geometry">
         <rect>
-         <x>390</x>
+         <x>360</x>
          <y>30</y>
-         <width>71</width>
+         <width>41</width>
          <height>31</height>
         </rect>
        </property>
@@ -1000,7 +993,7 @@
       <widget class="QPushButton" name="btn_install_version">
        <property name="geometry">
         <rect>
-         <x>480</x>
+         <x>410</x>
          <y>30</y>
          <width>81</width>
          <height>31</height>
@@ -1013,7 +1006,7 @@
       <widget class="QPushButton" name="btn_factory_default">
        <property name="geometry">
         <rect>
-         <x>560</x>
+         <x>490</x>
          <y>30</y>
          <width>81</width>
          <height>31</height>
@@ -1021,6 +1014,19 @@
        </property>
        <property name="text">
         <string>Factory Reset</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_exit">
+       <property name="geometry">
+        <rect>
+         <x>570</x>
+         <y>30</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Exit</string>
        </property>
       </widget>
      </widget>

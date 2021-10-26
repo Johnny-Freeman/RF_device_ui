@@ -13,11 +13,11 @@ QTabBar::tab {
    so that they look elegant regardless of the width of the text. */
 QPushButton {
 	background-color: palegoldenrod;
+	border-style: outset;
 	border-width: 2px;
 	border-color: darkkhaki;
 	border-style: solid;
-	border-radius: 5;
-	padding: 3px;
+	border-radius: 0px;
 }
 
 QPushButton:hover {
