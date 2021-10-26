@@ -266,7 +266,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Hz</string>
+    <string>GHz</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -316,6 +316,9 @@
     <property name="checkable">
      <bool>true</bool>
     </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
     <property name="autoExclusive">
      <bool>true</bool>
     </property>
@@ -357,7 +360,7 @@
      <bool>true</bool>
     </property>
     <property name="checked">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="autoExclusive">
      <bool>true</bool>

@@ -80,7 +80,7 @@ class main_menu(b):
 			# self.getChild('tabWidget').setStyleSheet("QTabBar::tab { height: 40px; width: 120px; }")
 			
 			# General stylesheet
-			self.setStyleSheet(get_stylesheet( _getRoot()+"/css/theme.css", _getRoot()+"/css/buttons.css" ))
+			self.setStyleSheet(get_stylesheet( _getRoot()+"/css/theme.css", _getRoot()+"/css/override.css" ))
 			
 		def window_setup(self):
 			# https://stackoverflow.com/questions/7021502/pyqt-remove-the-programs-title-bar
@@ -353,7 +353,7 @@ class main_menu(b):
 			self.getChild('lbl_sweep_pwr').setText(self.state.detector.get_sweep_power_string())
 		
 		def display_detector_static_output_freq(self):
-			self.getChild('lbl_detector_static_big_readout').setText(str(self.state.detector.output))
+			self.getChild('lbl_detector_static_big_readout').setText(str(round(self.state.detector.output,3)) + " dBm" )
 		
 		# =================================================
 		# Settings / Network
@@ -442,7 +442,7 @@ class main_menu(b):
 				self.update_static_data()
 			
 			# End Loop
-			QtCore.QTimer.singleShot(20, self.LOOP)
+			QtCore.QTimer.singleShot(250, self.LOOP)
 		
 		def update_sweep_data(self):
 			x,y = get_sweep_data()
