@@ -5,7 +5,7 @@ QMainWindow {
 	
 }
 
-.QWidget, QDialog {
+QWidget, QDialog {
 	/* background-color: beige; */
 	background-color: #332604;
 }

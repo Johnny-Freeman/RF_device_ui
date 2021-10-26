@@ -16,9 +16,7 @@ def import_widget4(path):
 		def getChild(self, regex_name):
 			# returns child, quick and simple
 			# QWidget is the most basic of classes and will search through all widgets.
-			if not regex_name in self.lookup_index:
-				self.lookup_index[regex_name] = self.findChild(QWidget, regex_name)
-			return self.lookup_index[regex_name]
+			return self.findChild(QWidget, regex_name)
 		
 		def getChildren(self, regex_name):
 			# returns list of children, quick and simple
@@ -31,9 +29,6 @@ def import_widget4(path):
 			# this method is composition
 			ui = Widget_Ui()
 			ui.setupUi(self)
-			
-			# Index to speed up child finding
-			self.lookup_index = {}
 			
 			# PlaceHolder
 			self.ConnectSignalsAndSlots()
@@ -170,7 +165,8 @@ class Generator_State():
 		
 		self.output_freq = Freq(0, UNIT.GHZ)
 		self.output_power = Power(0, UNIT.DBM)
-		
+			
+		self.vco_lock = False
 		self.pll_lock = False
 		
 		# Profilable
@@ -191,7 +187,7 @@ class Generator_State():
 		if freq_unit:
 			self.target_freq = Freq(value, freq_unit)
 		
-		elif type(value) in (float, int, str):
+		elif type(value) in (float, int):
 			raise TypeError("Numeric input values must be paired with freq_unit = <UNIT(enum)> type")
 			
 		else:
@@ -206,17 +202,11 @@ class Generator_State():
 	def get_freq_unit(self):
 		return self.freq_unit
 	
-	def get_target_freq_string(self, unit=None):
-		if unit:
-			return str( self.target_freq.cast(unit) )+ " " + str(unit)
-		else:
-			return str( self.target_freq.cast(self.freq_unit) )+ " " + str(self.freq_unit)
+	def get_target_freq_string(self):
+		return str( self.target_freq.cast(self.freq_unit) )+ " " + str(self.freq_unit)
 	
-	def get_output_freq_string(self, unit=None):
-		if unit:
-			return str( self.output_freq.cast(unit) )+ " " + str(unit)
-		else:
-			return str( self.output_freq.cast(self.freq_unit) )+ " " + str(self.freq_unit)
+	def get_output_freq_string(self):
+		return str( self.output_freq.cast(self.freq_unit) )+ " " + str(self.freq_unit)
 	
 	# Power
 	def set_target_power(self, value, power_unit=None):
@@ -238,17 +228,11 @@ class Generator_State():
 	def get_power_unit(self):
 		return self.power_unit
 	
-	def get_target_power_string(self, unit=None):
-		if unit:
-			return str( self.target_power.cast(unit) )+ " " + str(unit)
-		else:
-			return str( self.target_power.cast(self.power_unit) )+ " " + str(self.power_unit)
+	def get_target_power_string(self):
+		return str( self.target_power.cast(self.power_unit) )+ " " + str(self.power_unit)
 	
-	def get_output_power_string(self, unit=None):
-		if unit:
-			return str( self.output_power.cast(unit) )+ " " + str(unit)
-		else:
-			return str( self.output_power.cast(self.power_unit) )+ " " + str(self.power_unit)
+	def get_output_power_string(self):
+		return str( self.output_power.cast(self.power_unit) )+ " " + str(self.power_unit)
 	
 	# --------------------------
 	# import / export
@@ -273,12 +257,8 @@ class Generator_State():
 class Detector_State():
 	# Holds state of detector tab
 	def __init__(self, config=None):
-		# Readouts
-		self.read_power = 0
-		
-		# Defaults / Profileable
+		# Defaults
 		self.mode = "STATIC" #STATIC/SWEEP
-		self.power_display_unit = UNIT.DBM
 		
 		self.start_freq = Freq(0, UNIT.GHZ)
 		self.start_freq_unit = UNIT.GHZ
@@ -297,39 +277,7 @@ class Detector_State():
 	# --------------------------
 	# Helper functions
 	# --------------------------
-	def set_power_display_unit(self, unit):
-		self.power_display_unit = unit
 	
-	# start freq
-	def set_sweep_start_freq(self, value, freq_unit):
-		self.start_freq = value
-		self.start_freq_unit = freq_unit
-	
-	def get_sweep_start_freq_string(self):
-		return str(self.start_freq.cast(self.start_freq_unit)) + " " + str(self.start_freq_unit)
-	
-	# stop freq
-	def set_sweep_stop_freq(self, value, freq_unit):
-		self.stop_freq = value
-		self.stop_freq_unit = freq_unit
-		
-	def get_sweep_stop_freq_string(self):
-		return str(self.stop_freq.cast(self.stop_freq_unit)) + " " + str(self.stop_freq_unit)
-	
-	# sweep steps
-	def set_sweep_num_steps(self, num_steps):
-		self.num_steps = num_steps
-	
-	# sweep power
-	def set_sweep_power(self, value, power_unit):
-		self.power = value
-		self.power_unit = power_unit
-	
-	def get_static_read_power_string(self):
-		return str( round(self.read_power.cast(self.power_display_unit),3) ) + " " + str(self.power_display_unit)
-		
-	def get_sweep_power_string(self):
-		return str(self.power.cast(self.power_unit)) + " " + str(self.power_unit)
 	
 	# --------------------------
 	# import / export
@@ -337,7 +285,6 @@ class Detector_State():
 	def _export(self):
 		_dict = {
 			"mode" : self.mode,
-			"power_display_unit" : self.power_display_unit,
 			
 			"start_freq" : self.start_freq._export(),
 			"start_freq_unit" : self.start_freq_unit._export(),
@@ -354,7 +301,6 @@ class Detector_State():
 		
 	def _import(self, config):
 		self.mode = config["mode"]
-		self.power_display_unit = config["power_display_unit"]
 		
 		self.start_freq = Freq._import( config["start_freq"] )
 		self.start_freq_unit = UNIT._import( config["start_freq_unit"] )
@@ -371,9 +317,9 @@ class Network_State():
 	# Holds Network Settings
 	def __init__(self, config = None):
 		self.auto_ip = True
-		self.ip_address = "192.168.1.1"
-		self.netmask = "192.168.1.1"
-		self.gateway = "192.168.1.1"
+		self.ip_address = "0.0.0.0"
+		self.netmask = "0.0.0.0"
+		self.gateway = "0.0.0.0"
 		
 		if config:
 			self._import(config)

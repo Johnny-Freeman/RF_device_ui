@@ -27,6 +27,7 @@ https://doc.qt.io/qtforpython/overviews/stylesheet-examples.html
 	# REFERENCES
 	https://doc.qt.io/archives/qt-4.8/stylesheet-examples.html
 	https://doc.qt.io/archives/qt-4.8/stylesheet-reference.html
+	https://doc.qt.io/qt-5/stylesheet-syntax.html
 	https://code.qt.io/cgit/qt/qtbase.git/tree/examples/widgets/widgets/stylesheet/qss/pagefold.qss?h=5.15
 	
 

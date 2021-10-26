@@ -33,6 +33,8 @@ def _getRoot(relative=True):
 
 path = _getRoot() + """/ui/main_1.ui"""
 
+# WIP - for Dev/monkey wrench purpsoes
+from classes import Power
 
 # ==============================================
 # Backend Data? TBD on how to grab data
@@ -67,7 +69,7 @@ class main_menu(b):
 			
 			# Application State
 			self.state = Echo_Session()
-			self.set_detector_mode()
+			self.RELOAD()
 			
 			# Style Sheets
 			self.load_stylesheets()
@@ -95,20 +97,36 @@ class main_menu(b):
 			# Adding matplotlib Graph
 			x,y = get_sweep_data()
 			self.figure = QMatplot_Static(x,y, parent=self.getChild('frame_detector_sweep') )
-			
+		
+		
+		# =================================================
+		# Signals, Tabs, Slots
+		# =================================================		
+		def RELOAD(self):
+			# Called to refresh modes/state options across application
+			self.load_generator_state()
+			self.load_detector_state()
+			self.load_network_state()
+		
+		def DISPLAY(self):
+			# Called to refresh display labels across application
+			self.display_generator()
+			self.display_detector()
+			self.display_network()
+		
+		# General Interface
 		def ConnectSignalsAndSlots(self, *args, **kwargs):
 			# Reserved PlaceHolder, override at will.
 			# Programmically define click actions of children
 			self.getChild('btn_exit').clicked.connect(self.close)
-			
 			
 			# -------------------------
 			# Generator
 			# -------------------------
 			# Toggle RF ON/OFF
 			# clicked (not toggled) seems to work best for grouped buttons
-			self.getChild('btn_rf_on').clicked.connect(self.toggle_rf_on_off)
-			self.getChild('btn_rf_off').clicked.connect(self.toggle_rf_on_off)
+			self.getChild('btn_rf_on').clicked.connect(self.toggle_generator_rf_on_off)
+			self.getChild('btn_rf_off').clicked.connect(self.toggle_generator_rf_on_off)
 			
 			# Set target frequency/power
 			self.getChild('btn_set_freq').clicked.connect(self.input_user_freq)
@@ -132,6 +150,17 @@ class main_menu(b):
 			self.getChild('btn_toggle_static_mode').clicked.connect(self.set_detector_mode)			
 			self.getChild('btn_toggle_sweep_mode').clicked.connect(self.set_detector_mode)
 			
+			# Power options
+			self.getChild('btn_detector_dBm').clicked.connect(self.update_detector_power_choice)
+			self.getChild('btn_detector_mW').clicked.connect(self.update_detector_power_choice)
+			self.getChild('btn_detector_W').clicked.connect(self.update_detector_power_choice)
+			
+			# Static options
+			self.getChild('btn_static_generator_rf_on').clicked.connect(self.toggle_detector_rf_on_off)
+			self.getChild('btn_static_generator_rf_off').clicked.connect(self.toggle_detector_rf_on_off)
+			self.getChild('btn_static_generator_set_freq').clicked.connect(self.input_user_freq)
+			self.getChild('btn_static_generator_set_pwr').clicked.connect(self.input_user_power)
+			
 			# Sweep options
 			self.getChild('btn_sweep_start_freq').clicked.connect(self.set_sweep_start_freq)
 			self.getChild('btn_sweep_stop_freq').clicked.connect(self.set_sweep_stop_freq)
@@ -153,6 +182,21 @@ class main_menu(b):
 		# =================================================
 		# Generator
 		# =================================================
+		def toggle_generator_rf_on_off(self):
+			if self.getChild('btn_rf_on').isChecked():
+				self.state.generator.rf_on = True
+			else:
+				self.state.generator.rf_on = False
+			
+			self.RELOAD()
+				
+		def load_generator_state(self):
+			# radio on/off
+			if self.state.generator.rf_on:
+				self.getChild('btn_rf_on').setChecked(True)
+			else:
+				self.getChild('btn_rf_off').setChecked(True)
+		
 		# -------------------------
 		# Retreiving User input
 		# -------------------------
@@ -170,7 +214,7 @@ class main_menu(b):
 			if bool_set:
 				# Update generator targets
 				self.state.generator.set_target_freq(obj_value)
-				self.display_target_freq()
+				self.DISPLAY() # global_app << self.display_target_freq()
 			else:
 				pass
 		
@@ -203,7 +247,7 @@ class main_menu(b):
 			if bool_set:
 				# Update generator targets
 				self.state.generator.set_target_power(obj_value)
-				self.display_target_power()
+				self.DISPLAY() # global_app << self.display_target_power()
 			else:
 				pass
 		
@@ -239,18 +283,33 @@ class main_menu(b):
 			output_power_string = self.state.generator.get_output_power_string()
 			self.getChild('lbl_output_power').setText(output_power_string)
 		
-		# -------------------------
-		# Backend
-		# -------------------------		
-		def toggle_rf_on_off(self):
-			if self.getChild('btn_rf_on').isChecked():
-				self.state.generator.rf_on = True
-			else:
-				self.state.generator.rf_on = False
+		def display_generator(self):
+			self.display_target_freq()
+			self.display_target_power()
+			self.display_output_freq()
+			self.display_output_power()
 		
 		# =================================================
 		# Detector
 		# =================================================
+		def load_detector_state(self):
+			# radio on/off
+			if self.state.generator.rf_on:
+				self.getChild('btn_static_generator_rf_on').setChecked(True)
+			else:
+				self.getChild('btn_static_generator_rf_off').setChecked(True)
+			
+			# misc
+			self.set_detector_mode()
+		
+		def toggle_detector_rf_on_off(self):
+			if self.getChild('btn_static_generator_rf_on').isChecked():
+				self.state.generator.rf_on = True
+			else:
+				self.state.generator.rf_on = False
+			
+			self.RELOAD()
+				
 		def set_detector_mode(self):
 			if self.getChild("btn_toggle_static_mode").isChecked():
 				self.state.detector.mode = "STATIC"
@@ -259,23 +318,47 @@ class main_menu(b):
 				self.state.detector.mode = "SWEEP"
 				self.init_detector_sweep_mode()
 		
-		def init_detector_static_mode(self):
-			self.getChild("grp_sweep_controls").setEnabled(False)
+		def update_detector_power_choice(self):
+			if self.getChild('btn_detector_mW').isChecked():
+				unit = UNIT.MIL
+			elif self.getChild('btn_detector_W').isChecked():
+				unit = UNIT.W
+			else: # dBm
+				unit = UNIT.DBM
+			self.state.detector.set_power_display_unit(unit)
 			
-			# enable static frame
+			# update displays
+			self.display_detector_static_read_power
+		
+		def init_detector_static_mode(self):
+			# enable static components
 			self.getChild("frame_detector_static").setEnabled(True)
 			self.getChild("frame_detector_static").setVisible(True)
+			
+			self.getChild("grp_static_generator_controls").setEnabled(True)
+			self.getChild("grp_static_generator_controls").setVisible(True)
+			
+			# disable sweep components
 			self.getChild("frame_detector_sweep").setEnabled(False)
 			self.getChild("frame_detector_sweep").setVisible(False)
+			
+			self.getChild("grp_sweep_controls").setEnabled(False)
+			self.getChild("grp_sweep_controls").setVisible(False)
 		
 		def init_detector_sweep_mode(self):
-			self.getChild("grp_sweep_controls").setEnabled(True)
-			
-			# enable sweep frame
+			# disable static components
 			self.getChild("frame_detector_static").setEnabled(False)
 			self.getChild("frame_detector_static").setVisible(False)
+			
+			self.getChild("grp_static_generator_controls").setEnabled(False)
+			self.getChild("grp_static_generator_controls").setVisible(False)
+			
+			# enable sweep components
 			self.getChild("frame_detector_sweep").setEnabled(True)
 			self.getChild("frame_detector_sweep").setVisible(True)
+			
+			self.getChild("grp_sweep_controls").setEnabled(True)
+			self.getChild("grp_sweep_controls").setVisible(True)
 		
 		# -------------------------
 		# Sweep settings
@@ -356,12 +439,27 @@ class main_menu(b):
 			self.getChild('lbl_sweep_num_steps').setText(str(self.state.detector.num_steps))
 			self.getChild('lbl_sweep_pwr').setText(self.state.detector.get_sweep_power_string())
 		
-		def display_detector_static_output_freq(self):
-			self.getChild('lbl_detector_static_big_readout').setText(str(round(self.state.detector.output,3)) + " dBm" )
+		def display_detector_static_target_freq(self):
+			self.getChild('lbl_static_generator_target_freq').setText(self.state.generator.get_target_freq_string() )
+		
+		def display_detector_static_target_power(self):
+			self.getChild('lbl_static_generator_target_power').setText(self.state.generator.get_target_power_string() )
+		
+		def display_detector_static_read_power(self):
+			self.getChild('lbl_detector_static_big_readout').setText(self.state.detector.get_static_read_power_string() )
+		
+		def display_detector(self):
+			self.display_detector_sweep_settings()
+			self.display_detector_static_target_freq()
+			self.display_detector_static_target_power()
+			self.display_detector_static_read_power()
 		
 		# =================================================
 		# Settings / Network
 		# =================================================
+		def load_network_state(self):
+			pass
+		
 		def set_network_mode(self):
 			if self.getChild("rbtn_dynamic_ip").isChecked():
 				self.set_dynamic_ip()
@@ -434,6 +532,9 @@ class main_menu(b):
 			self.getChild("txt_ip_address").setText(self.state.network.ip_address)
 			self.getChild("txt_netmask").setText(self.state.network.netmask)
 			self.getChild("txt_gateway").setText(self.state.network.gateway)
+		
+		def display_network(self):
+			self.display_network_settings()
 
 		# -------------------------
 		# Loops
@@ -459,11 +560,13 @@ class main_menu(b):
 			# print("sweep beat")
 		
 		def update_static_data(self):
+			# monkey wrench
 			x,y = get_sweep_data()
-			self.state.detector.output = y[-1]
+			num = y[-1]
+			self.state.detector.read_power = Power(num, UNIT.DBM)
 			
 			# display
-			self.display_detector_static_output_freq()
+			self.display_detector_static_read_power()
 		
 		# -------------------------
 		# Get monkey data
